@@ -43,7 +43,7 @@ Usuario de acceso en todos los sistemas: `bchecker` / `bchecker121`.
 
 - [Arquitectura](docs/arquitectura.md)
 - [Router](docs/router.md)
-- [Servidor web, SSH y aplicación de prueba](docs/web-ssh.md)
+- [Servidor web, SSH y aplicación de prueba](docs/Servidor web, SSH y aplicación de prueba.md)
 - [Base de datos](docs/bbdd.md)
 - [DNS y DHCP](docs/dns-dhcp.md)
 - [Servidor FTP](docs/ftp.md)
