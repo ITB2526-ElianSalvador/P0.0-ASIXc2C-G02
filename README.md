@@ -41,12 +41,12 @@ Usuario de acceso en todos los sistemas: `bchecker` / `bchecker121`.
 
 ## Índice de documentación
 
-- [Arquitectura](docs/arquitectura.md)
-- [Router](docs/router.md)
-- [Servidor web, SSH y aplicación de prueba](docs/web-ssh.md)
-- [Base de datos](docs/bbdd.md)
-- [DNS y DHCP](docs/dns-dhcp.md)
-- [Servidor FTP](docs/ftp.md)
-- [Clientes](docs/clients.md)
-- [Control de versiones con Git](docs/git.md)
-- [Ficheros de configuración](config/)
+- [Arquitectura](<docs/Arquitectura.md>)
+- [Router](<docs/Router.md>)
+- [Servidor web, SSH y aplicación de prueba](<docs/Servidor web, SSH y aplicación de prueba.md>)
+- [Base de datos](<docs/Base de datos.md>)
+- [DNS y DHCP](<docs/DNS y DHCP.md>)
+- [Servidor FTP](<docs/Servidor FTP.md>)
+- [Clientes](<docs/Clientes.md>)
+- [Control de versiones con Git](<docs/Control de versiones con Git.md>)
+- [Ficheros de configuración](<config/>)
