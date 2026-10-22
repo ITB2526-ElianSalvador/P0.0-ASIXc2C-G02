@@ -1,0 +1,7 @@
+# PCL-N02: /etc/netplan/01-network-manager-all.yaml
+# Procedencia: ajustes activos visibles en la página 8 del PDF de capturas.
+network:
+  version: 2
+  ethernets:
+    enp1s0:
+      dhcp4: true

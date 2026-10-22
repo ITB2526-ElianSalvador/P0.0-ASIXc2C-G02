@@ -68,7 +68,7 @@ Se asigna el nombre previsto en la arquitectura:
 sudo hostnamectl set-hostname DNS-N02
 ```
 
-![Asignación del hostname DNS-N02 mediante hostnamectl](img/dns-dhcp/01-hostname-servidor.png)
+![Asignación del hostname DNS-N02 mediante hostnamectl](<../imagenes/DNS i DHCP/01-hostname-servidor.png>)
 
 *Figura 1. Cambio del nombre del servidor a DNS-N02.*
 
@@ -86,7 +86,7 @@ La [transcripción de la captura original](../config/dns-dhcp/evidencias/netplan
 
 Se utiliza `1.1.1.1` como DNS del propio servidor durante la preparación. Este ajuste es independiente del DNS `192.168.20.10` que DHCP entrega a los clientes.
 
-![Archivo Netplan del servidor con la dirección estática 192.168.20.10/24](img/dns-dhcp/02-netplan-servidor.png)
+![Archivo Netplan del servidor con la dirección estática 192.168.20.10/24](<../imagenes/DNS i DHCP/02-netplan-servidor.png>)
 
 *Figura 2. Captura original de Netplan. Muestra la IP de la Intranet, pero la ruta predeterminada aparece incompleta: falta `via: 192.168.20.1`.*
 
@@ -112,7 +112,7 @@ dnsmasq --version
 
 `dnsmasq` proporciona los dos servicios y `dnsutils` incorpora herramientas como `nslookup` y `dig` para comprobar la resolución de nombres.
 
-![Salida de dnsmasq --version con la versión 2.91](img/dns-dhcp/03-version-dnsmasq.png)
+![Salida de dnsmasq --version con la versión 2.91](<../imagenes/DNS i DHCP/03-version-dnsmasq.png>)
 
 *Figura 3. Comprobación de la instalación. La captura muestra dnsmasq 2.91.*
 
@@ -126,7 +126,7 @@ sudo nano /etc/dnsmasq.conf
 
 Las directivas visibles en la captura se conservan en [config/dns-dhcp/dnsmasq.conf](../config/dns-dhcp/dnsmasq.conf). Es una transcripción de la evidencia aportada, no una descarga del archivo actual de la máquina. La explicación de cada ajuste se recoge a continuación.
 
-![Configuración conjunta de DNS y DHCP en /etc/dnsmasq.conf](img/dns-dhcp/04-configuracion-dnsmasq.png)
+![Configuración conjunta de DNS y DHCP en /etc/dnsmasq.conf](<../imagenes/DNS i DHCP/04-configuracion-dnsmasq.png>)
 
 *Figura 4. Configuración original de dnsmasq con el rango, la puerta de enlace y el DNS de los clientes.*
 
@@ -159,7 +159,7 @@ sudo systemctl enable dnsmasq
 sudo systemctl status dnsmasq
 ```
 
-![Estado de dnsmasq con el servicio habilitado y active (running)](img/dns-dhcp/05-estado-servicio.png)
+![Estado de dnsmasq con el servicio habilitado y active (running)](<../imagenes/DNS i DHCP/05-estado-servicio.png>)
 
 *Figura 5. dnsmasq aparece habilitado y en estado `active (running)`.*
 
@@ -184,7 +184,7 @@ nslookup google.com 192.168.20.10
 
 La primera consulta devuelve `192.168.20.1`, la dirección del router en la Intranet. La segunda obtiene direcciones de `google.com`, lo que acredita la resolución de un nombre externo a través de dnsmasq. Las direcciones devueltas para un dominio público pueden cambiar entre consultas.
 
-![Consultas nslookup del nombre R y de google.com al servidor 192.168.20.10](img/dns-dhcp/06-pruebas-dns-servidor.png)
+![Consultas nslookup del nombre R y de google.com al servidor 192.168.20.10](<../imagenes/DNS i DHCP/06-pruebas-dns-servidor.png>)
 
 *Figura 6. Resolución correcta de un nombre interno y de un dominio externo.*
 
@@ -203,7 +203,7 @@ sudo netplan generate
 sudo netplan apply
 ```
 
-![Configuración del cliente Linux con dhcp4 activado en enp1s0](img/dns-dhcp/07-netplan-cliente-linux.png)
+![Configuración del cliente Linux con dhcp4 activado en enp1s0](<../imagenes/DNS i DHCP/07-netplan-cliente-linux.png>)
 
 *Figura 7. Configuración del cliente para obtener una dirección IPv4 automáticamente.*
 
@@ -213,7 +213,7 @@ La comprobación aportada se realiza con:
 ip route
 ```
 
-![Tabla de rutas de Linux con la IP 192.168.20.112 y la puerta de enlace 192.168.20.1](img/dns-dhcp/08-rutas-cliente-linux.png)
+![Tabla de rutas de Linux con la IP 192.168.20.112 y la puerta de enlace 192.168.20.1](<../imagenes/DNS i DHCP/08-rutas-cliente-linux.png>)
 
 *Figura 8. La ruta predeterminada utiliza `192.168.20.1`, el origen es `192.168.20.112` y aparece `proto dhcp`.*
 
@@ -225,7 +225,7 @@ También se comprueba el nombre del router desde el cliente:
 nslookup R-N02 192.168.20.10
 ```
 
-![Consulta desde Linux que resuelve R-N02 como 192.168.20.1](img/dns-dhcp/09-prueba-dns-cliente-linux.png)
+![Consulta desde Linux que resuelve R-N02 como 192.168.20.1](<../imagenes/DNS i DHCP/09-prueba-dns-cliente-linux.png>)
 
 *Figura 9. El DNS local responde a la consulta de `R-N02` con `192.168.20.1`.*
 
@@ -239,7 +239,7 @@ En el cliente Windows se consulta la configuración de red con:
 ipconfig /all
 ```
 
-![Configuración de Windows con dirección 192.168.20.148 y servidor DNS y DHCP 192.168.20.10](img/dns-dhcp/10-ipconfig-cliente-windows.png)
+![Configuración de Windows con dirección 192.168.20.148 y servidor DNS y DHCP 192.168.20.10](<../imagenes/DNS i DHCP/10-ipconfig-cliente-windows.png>)
 
 *Figura 10. Configuración recibida por el cliente Windows.*
 
