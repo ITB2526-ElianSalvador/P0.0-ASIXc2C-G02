@@ -1,0 +1,17 @@
+# PROPUESTA RECONSTRUIDA. Pendiente de contraste con la VM.
+# Destino previsto: DNS-N02, /etc/netplan/00-installer-config.yaml.
+# Respecto a la captura de la página 4, se añade via: 192.168.20.1.
+# No acredita que esta versión completa ya esté aplicada en el servidor.
+network:
+  version: 2
+  ethernets:
+    enp1s0:
+      dhcp4: false
+      addresses:
+        - 192.168.20.10/24
+      routes:
+        - to: default
+          via: 192.168.20.1
+      nameservers:
+        addresses:
+          - 1.1.1.1
