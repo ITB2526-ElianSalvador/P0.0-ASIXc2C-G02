@@ -1,0 +1,13 @@
+# Procedencia: contenido de docs/router.md anterior a esta actualización.
+# Equipo: R-N02. Destino declarado: /etc/netplan/50-cloud-init.yaml.
+# No hay captura de este archivo del router en el Word.
+# Pendiente de contraste con la configuración efectiva de la VM.
+network:
+  version: 2
+  ethernets:
+    enp1s0:
+      dhcp4: true
+    enp2s0:
+      addresses: [192.168.10.1/24]
+    enp3s0:
+      addresses: [192.168.20.1/24]
