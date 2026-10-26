@@ -1,44 +1,108 @@
+# Base de datos de equipamientos
 
-   50  wget -O equipaments.csv "https://opendata-ajuntament.barcelona.cat/data/dataset/f36b60f2-9541-4d08-b0f9-b0a9313fab3d/resource/29d9ff10-6892-4f16-9012-d5c4997857e7/download" file equipaments.csv
-   51  ls
-   52  cat equipaments.csv 
-   53  clear
-   54  head -n 3 equipaments.csv
-   55  head -n 1 equipaments.csv
-   56  register_id,name,institution_id,institution_name,created,modified,addresses_roadtype_id,addresses_roadtype_name,addresses_road_id,addresses_road_name,addresses_start_street_number,addresses_end_street_number,addresses_neighborhood_id,addresses_neighborhood_name,addresses_district_id,addresses_district_name,addresses_zip_code,addresses_town,addresses_main_address,addresses_type,values_id,values_attribute_id,values_category,values_attribute_name,values_value,values_outstanding,values_description,secondary_filters_id,secondary_filters_name,secondary_filters_fullpath,secondary_filters_tree,secondary_filters_asia_id,geo_epgs_25831_x,geo_epgs_25831_y,geo_epgs_4326_lat,geo_epgs_4326_lon,estimated_dates,start_date,end_date,timetable
-   57  clear
-   58  (echo "CREATE TABLE equipaments ("; head -n 1 equipaments.csv | sed; 's/^\xEF\xBB\xBF//' | tr -d '"\r' | sed 's/,/ TEXT, /g; s/$/ TEXT/'; echo; ");") > crear_tabla.sql
-   59  ls
-   60  cat crear_tabla.sql 
-   61  sudo nano crear_tabla.sql 
-   62  ls
-   63  sudo rm equipaments.csv 
-   64  ls
-   65  (echo "CREATE TABLE equipaments ("; head -n 1 equipaments.csv | sed; 's/^\xEF\xBB\xBF//' | tr -d '"\r' | sed 's/,/ TEXT, /g; s/$/ TEXT/'; echo; ");") > crear_tabla.sql
-   66  ls
-   67  clear
-   68  ls
-   69  clear
-   70  wget -O equipaments.csv "https://opendata-ajuntament.barcelona.cat/data/dataset/f36b60f2-9541-4d08-b0f9-b0a9313fab3d/resource/29d9ff10-6892-4f16-9012-d5c4997857e7/download" file equipaments.csv
-   71  ls
-   72  clear
-   73  sudo rm crear_tabla.sql 
-   74  ls
-   75  clea
-   76  clear
-   77  ls
-   78  (echo "CREATE TABLE equipaments ("; head -n 1 equipaments.csv | sed 's/^\xEF\xBB\xBF//' | tr -d '"\r' | sed 's/,/ TEXT, /g; s/$/ TEXT/'; echo ");") > crear_tabla.sql
-   79  cat crear_tabla.sql
-   80  ls
-   81  sudo mysql equipaments < crear_tabla.sql
-   82  iconv -f UTF-16 -t UTF-8 equipaments.csv -o equipaments_utf8.csv 2>/dev/null || tr -d '\0' < equipaments.csv > equipaments_utf8.csv
-   83  mv equipaments_utf8.csv equipaments.csv
-   84  (echo "CREATE TABLE equipaments ("; head -n 1 equipaments.csv | sed 's/^\xEF\xBB\xBF//' | tr -d '"\r' | sed 's/,/ TEXT, /g; s/$/ TEXT/'; echo ");") > crear_tabla.sql
-   85  cat crear_tabla.sql
-   86  sudo mysql equipaments < crear_tabla.sql
-   87  tr -d '\0' < equipaments.csv > equipaments_clean.csv
-   88  mv equipaments_clean.csv equipaments.csv
-   89  cat crear_tabla.sql
-   90  sudo mv equipaments.csv /var/lib/mysql-files/
-   91  sudo mysql equipaments
-   92  history
+[Volver al proyecto](../README.md) · [Arquitectura](arquitectura.md) · [Archivos y evidencias](../config/bbdd/README.md)
+
+## 1. Objetivo y alcance de las evidencias
+
+La base de datos proporciona los registros que muestra la aplicación web. El diseño del proyecto sitúa el servidor **B-N02** en la Intranet, con dirección `192.168.20.20/24`, y asigna esta parte a Elias.
+
+La documentación disponible permite describir la preparación de la VM, el trabajo registrado sobre un CSV y la integración visible desde PHP. **No permite reconstruir todavía toda la instalación y carga de MySQL.** La versión anterior de este documento era un historial de terminal, que se conserva íntegro en [historial-original.txt](../config/bbdd/evidencias/historial-original.txt).
+
+| Dato | Fuente y situación |
+| --- | --- |
+| Nombre previsto | B-N02, según el inventario. |
+| Nombre mostrado en las capturas | B-NCC, pendiente de contrastar con la VM actual. |
+| Sistema de partida | Plantilla Ubuntu 22.04 Server de Isard. |
+| Red prevista | ITB 1, Intranet. |
+| Dirección prevista | `192.168.20.20`; coincide con el destino que utiliza PHP. |
+| Base indicada en PHP | `equipaments` |
+| Tabla mencionada en el historial | `equipaments`; falta mostrar su definición efectiva. |
+
+## 2. Preparación del servidor
+
+El Word muestra la selección de la plantilla y una configuración de preparación con dos conexiones: ITB 1 y Default.
+
+![Plantilla Ubuntu Server seleccionada](../imagenes/B-N02/01-plantilla-ubuntu-server.png)
+
+*Figura 1. Plantilla Ubuntu 22.04 Server utilizada en la preparación.*
+
+![Redes de la VM durante la preparación](../imagenes/B-N02/02-redes-preparacion-vm.png)
+
+*Figura 2. Conexiones ITB 1 y Default en la configuración capturada.*
+
+El texto explica que Default se añadió temporalmente para instalar paquetes. El diseño final requiere conservar solo la conexión interna, con salida por R-N02; su retirada no está acreditada con una captura posterior.
+
+Se ejecutó `sudo apt install openssh-server`. La respuesta indica que el paquete ya estaba instalado y actualizado, no que se instalara por primera vez:
+
+![Comprobación del paquete openssh-server](../imagenes/B-N02/03-instalacion-openssh.png)
+
+*Figura 3. APT informa `openssh-server is already the newest version`.*
+
+El Word describe la preparación del bastión y claves SSH para administrar esta VM, pero no aporta una captura de una sesión remota final identificada en el servidor. La presencia del paquete no demuestra por sí sola que el servicio esté escuchando o sea accesible.
+
+## 3. Nombre provisional observado
+
+La secuencia utiliza:
+
+```bash
+sudo hostnamectl set-hostname B-NCC
+hostname
+```
+
+![Asignación del nombre provisional de la base de datos](../imagenes/B-N02/04-cambio-hostname-provisional.png)
+
+*Figura 4. El comando visible utiliza B-NCC.*
+
+![Comprobación del hostname provisional](../imagenes/B-N02/05-hostname-provisional.png)
+
+*Figura 5. La comprobación devuelve B-NCC, distinto del nombre B-N02 del inventario.*
+
+Se conserva la diferencia para que pueda revisarse. No se cambia el comando de la captura por el nombre previsto ni se da por efectuado un renombrado posterior.
+
+## 4. Preparación de los datos registrada en el repositorio
+
+El historial previo contiene estos grupos de operaciones:
+
+| Trabajo registrado | Evidencia y límite |
+| --- | --- |
+| Descarga del CSV | Uso de `wget -O equipaments.csv` con una URL de Open Data Barcelona. El historial no incluye la salida de descarga. |
+| Revisión del archivo | Órdenes `file`, `cat` y `head`; aparece una cabecera con campos como `register_id`, `name` e `institution_name`. |
+| Preparación de estructura SQL | Intentos de generar `crear_tabla.sql` a partir de la cabecera, usando columnas `TEXT`. No se conserva el archivo SQL resultante. |
+| Revisión de codificación | Intentos con `iconv` y eliminación de bytes nulos. No se muestra la validación final de la codificación. |
+| Ejecución del archivo SQL | Órdenes `sudo mysql equipaments < crear_tabla.sql`, sin sus resultados. |
+| Preparación de carga | Movimiento del CSV a `/var/lib/mysql-files/` y apertura de la consola MySQL. Falta la sentencia de carga y su salida. |
+
+Se trata de un registro de trabajo, con repeticiones, correcciones y errores de escritura. No se convierte en un script de instalación: contiene comandos incompletos y operaciones sobre archivos que requieren contexto. Su presencia acredita el registro de esos intentos, no el éxito de cada uno.
+
+La carga mediante `LOAD DATA` exige ajustar el formato real del CSV, cabeceras, separadores, delimitación y codificación, además de los permisos y restricciones del servidor. Sin la sentencia ejecutada y su resultado, no se puede afirmar que la importación completa esté verificada. Referencia: [LOAD DATA de MySQL](https://dev.mysql.com/doc/refman/8.0/en/load-data.html).
+
+## 5. Evidencia de integración con la aplicación
+
+El fragmento de `/var/www/html/index.php` en W-N02 contiene:
+
+```php
+$host = "192.168.20.20";
+$bd = "equipaments";
+```
+
+El formulario intenta abrir una conexión `mysqli` con las credenciales introducidas. Después del acceso, la aplicación muestra registros de equipamientos:
+
+![Listado de equipamientos visible en la aplicación](../imagenes/W-N02/09-tabla-tras-login.png)
+
+*Figura 6. La pantalla muestra `bchecker` y 200 filas, con columnas de identificación, nombre e institución.*
+
+Esto respalda el funcionamiento observado de la aplicación con datos. Para atribuir y reproducir toda la carga hacen falta la configuración efectiva de MySQL, el código de consulta y el estado real del esquema. El número mostrado no se interpreta como el total de filas de la base de datos.
+
+## 6. Comprobaciones pendientes
+
+Para completar esta sección, recoger directamente en la VM:
+
+- [ ] Hostname definitivo, IP efectiva y tabla de rutas.
+- [ ] Versión de MySQL y estado del servicio.
+- [ ] Configuración de escucha que permite el acceso desde W-N02.
+- [ ] Definición real de `equipaments`, incluidos tipos, claves y tabla consultada.
+- [ ] Creación del usuario de MySQL y permisos efectivos de acceso desde la aplicación.
+- [ ] Archivo SQL o procedimiento de carga utilizado, con resultados y recuento de registros.
+- [ ] Consulta de muestra y prueba de conexión desde W-N02.
+
+La cuenta Linux `bchecker`, el usuario de MySQL y el acceso a la aplicación se deben comprobar por separado. Las cuentas de MySQL pueden tener restricciones por origen; no se inventan sentencias `GRANT` ni parámetros de escucha sin conocer la configuración aplicada.

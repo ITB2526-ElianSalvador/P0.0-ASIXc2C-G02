@@ -1,0 +1,14 @@
+# F-N02: /etc/netplan/00-installer-config.yaml.
+# Procedencia: directivas activas de la captura Netplan del Word actualizado.
+# Se ordena version al inicio sin modificar los valores visibles.
+# Pendiente de contraste con todos los archivos efectivos de la VM.
+network:
+  version: 2
+  ethernets:
+    enp1s0:
+      addresses: [192.168.10.11/24]
+      routes:
+        - to: default
+          via: 192.168.10.1
+      nameservers:
+        addresses: [1.1.1.1]
