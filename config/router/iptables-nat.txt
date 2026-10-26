@@ -1,0 +1,5 @@
+# Comando exacto visible en la figura 5 de docs/router.md.
+# Equipo: R-N02. Interfaz de salida: enp1s0.
+# Texto documental: no es un archivo completo para iptables-restore.
+# Comprobar si la regla existe antes de repetirla.
+sudo iptables -t nat -A POSTROUTING -o enp1s0 -j MASQUERADE

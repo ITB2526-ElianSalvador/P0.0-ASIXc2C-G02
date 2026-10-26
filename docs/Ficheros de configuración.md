@@ -4,7 +4,17 @@
 
 ## Organización
 
-Los archivos se guardan en [config/](../config/README.md), mientras que `docs/` explica el procedimiento, el motivo de los ajustes y las pruebas realizadas. Las capturas se guardan en [imagenes/DNS i DHCP](<../imagenes/DNS i DHCP/>), en la raíz del repositorio, y complementan los archivos de texto para mostrar la evidencia de la práctica.
+Los archivos se guardan en [config/](../config/README.md), mientras que `docs/` explica el procedimiento, el motivo de los ajustes y las pruebas realizadas. Las capturas se guardan en la raíz, dentro de `imagenes/`: [router R-N02](../imagenes/R-N02/) y [DNS y DHCP](<../imagenes/DNS i DHCP/>). Complementan los archivos de texto para mostrar la evidencia de la práctica.
+
+## Router R-N02
+
+| Configuración | Archivo | Ubicación en la máquina |
+| --- | --- | --- |
+| Direccionamiento de las tres interfaces | [netplan-router.yaml](../config/router/netplan-router.yaml) | `/etc/netplan/50-cloud-init.yaml`, según la memoria anterior. |
+| Reenvío IPv4 | [sysctl-router.conf](../config/router/sysctl-router.conf) | Fragmento de `/etc/sysctl.conf`. |
+| Regla de enmascaramiento NAT | [iptables-nat.txt](../config/router/iptables-nat.txt) | Comando ejecutado con `iptables`; el guardado IPv4 se referencia en `/etc/iptables/rules.v4`. |
+
+El [inventario del router](../config/router/README.md) distingue la configuración trasladada de la memoria anterior de las transcripciones de capturas. No se dispone de una exportación completa de `rules.v4`. El procedimiento, la explicación y las pruebas están en [Router R-N02](router.md).
 
 ## DNS y DHCP
 
@@ -16,4 +26,5 @@ Los archivos se guardan en [config/](../config/README.md), mientras que `docs/` 
 
 El [inventario de DNS y DHCP](../config/dns-dhcp/README.md) diferencia las transcripciones de las capturas de las correcciones propuestas. Conserva también la evidencia de Netplan con la ruta incompleta y una alternativa de dnsmasq que añade `R-N02`.
 
-La memoria del procedimiento, los fundamentos y las capturas están en [DNS y DHCP](<DNS y DHCP.md>). Las configuraciones del resto de servicios quedan fuera de esta actualización.
+La memoria del procedimiento, los fundamentos y las capturas están en [DNS y DHCP](<DNS y DHCP.md>). Las configuraciones de los servicios que no figuran en este inventario quedan pendientes de incorporar.
+

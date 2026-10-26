@@ -42,7 +42,7 @@ Usuario de acceso en todos los sistemas: `bchecker` / `bchecker121`.
 ## Índice de documentación
 
 - [Arquitectura](<docs/Arquitectura.md>)
-- [Router](<docs/Router.md>)
+- [Router](docs/router.md)
 - [Servidor web, SSH y aplicación de prueba](<docs/Servidor web, SSH y aplicación de prueba.md>)
 - [Base de datos](<docs/Base de datos.md>)
 - [DNS y DHCP](<docs/DNS y DHCP.md>)
@@ -50,3 +50,4 @@ Usuario de acceso en todos los sistemas: `bchecker` / `bchecker121`.
 - [Clientes](<docs/Clientes.md>)
 - [Control de versiones con Git](<docs/Control de versiones con Git.md>)
 - [Ficheros de configuración](<config/>)
+
