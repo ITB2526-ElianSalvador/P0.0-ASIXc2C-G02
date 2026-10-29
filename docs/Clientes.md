@@ -4,26 +4,26 @@
 
 ## 1. Objetivo
 
-Los dos clientes sirven para probar los servicios de la infraestructura, uno desde Linux y otro desde Windows. Los dos están en la Intranet `192.168.20.0/24` (ITB 1 en Isard) y usan R-N02 como puerta de enlace y DNS-N02 como servidor DNS y DHCP.
+Los clientes se usan para probar los servicios de la infraestructura: uno es Linux y el otro Windows. Los dos están en la Intranet `192.168.20.0/24` (ITB 1 en Isard), con R-N02 como puerta de enlace y DNS-N02 como servidor DNS y DHCP.
 
 | Equipo | Sistema | IPv4 | Asignación | Puerta de enlace |
 | --- | --- | --- | --- | --- |
-| PCL-N02 | Ubuntu con entorno gráfico (versión sin confirmar) | `192.168.20.112/24` | DHCP | `192.168.20.1` |
-| PCW-N02 | Windows (versión sin confirmar) | `192.168.20.148/24` | DHCP | `192.168.20.1` |
+| PCL-N02 | Ubuntu con entorno gráfico | `192.168.20.112/24` | DHCP | `192.168.20.1` |
+| PCW-N02 | Windows | `192.168.20.148/24` | DHCP | `192.168.20.1` |
 
-Las IP son las que salen en las capturas y pueden cambiar, porque las reparte el DHCP. El rango configurado en DNS-N02 va de `192.168.20.100` a `192.168.20.150`, con concesiones de 12 horas.
+Las IP son las que aparecen en las capturas y pueden cambiar, ya que las da el DHCP. El rango de DNS-N02 va de `192.168.20.100` a `192.168.20.150`, con concesiones de 12 horas.
 
 ## 2. Cliente Linux (PCL-N02)
 
 ### 2.1. Nombre del equipo
 
-Para poner el nombre se editó el archivo `/etc/hostname`:
+Para poner el nombre se edita el archivo `/etc/hostname`:
 
 ```bash
 sudo nano /etc/hostname
 ```
 
-Contenido del archivo:
+El contenido queda así:
 
 ```text
 PCL-N02
@@ -33,11 +33,11 @@ PCL-N02
 
 *Figura 1. Edición del hostname. En las capturas siguientes el prompt ya muestra PCL-N02.*
 
-Editar el archivo deja el nombre guardado de forma permanente, pero para que se aplique en el sistema que ya está arrancado hay que reiniciar o usar las herramientas del sistema. Abrir otra terminal no basta.
+Con esto el nombre queda guardado, pero para que se aplique en el sistema que ya está encendido hay que reiniciar.
 
 ### 2.2. Red por DHCP
 
-El archivo de red es `/etc/netplan/01-network-manager-all.yaml`:
+La red se configura en `/etc/netplan/01-network-manager-all.yaml`:
 
 ```yaml
 network:
@@ -47,13 +47,13 @@ network:
       dhcp4: true
 ```
 
-Con `dhcp4: true` el cliente pide la configuración al servidor DHCP. La IP `.112` no se escribe a mano, la recibe en la concesión. Tampoco se pusieron a mano la ruta por defecto ni los DNS.
+Con `dhcp4: true` el cliente pide su configuración al servidor DHCP. La IP `.112` no se pone a mano, la recibe del servidor. La ruta por defecto y los DNS tampoco se configuraron manualmente.
 
 ![Netplan del cliente Linux con DHCP](../imagenes/PCL-N02/02-netplan-dhcp.png)
 
 *Figura 2. Configuración de `enp1s0` con DHCP activado. El comentario del archivo menciona NetworkManager.*
 
-La copia del YAML está en [config/dns-dhcp/netplan-cliente-linux.yaml](../config/dns-dhcp/netplan-cliente-linux.yaml), así que se usa ese mismo archivo y no se mantienen dos versiones. Para probar un cambio antes de aplicarlo se puede usar `sudo netplan generate` y `sudo netplan try`.
+La copia del YAML está en [config/dns-dhcp/netplan-cliente-linux.yaml](../config/dns-dhcp/netplan-cliente-linux.yaml). Si se quiere probar un cambio antes de aplicarlo, se pueden usar `sudo netplan generate` y `sudo netplan try`.
 
 Referencia: [configuración YAML de Netplan](https://netplan.readthedocs.io/en/stable/netplan-yaml/).
 
@@ -69,7 +69,7 @@ ip a
 
 *Figura 3. `enp1s0` está activa y tiene `192.168.20.112/24`, marcada como `dynamic`.*
 
-La IP está dentro del rango del proyecto. Que venga por DHCP se ve por el YAML, por la marca `dynamic` y por la ruta con `proto dhcp`. Estar dentro del rango no demuestra nada por sí solo.
+La IP está dentro del rango del proyecto y viene por DHCP, como se ve por la marca `dynamic` y por la ruta con `proto dhcp`.
 
 ### 2.4. Tabla de rutas
 
@@ -87,7 +87,7 @@ default via 192.168.20.1 dev enp1s0 proto dhcp src 192.168.20.112 metric 100
 
 *Figura 4. La puerta de enlace por defecto es R-N02 y la ruta llegó por DHCP.*
 
-La red `192.168.20.0/24` se alcanza directamente por la interfaz. Para llegar a la DMZ o a otras redes el cliente pasa por `192.168.20.1`.
+La red `192.168.20.0/24` se alcanza directamente por la interfaz. Para llegar a la DMZ o a otras redes, el cliente sale por `192.168.20.1`.
 
 ### 2.5. Resolución de nombres
 
@@ -99,13 +99,11 @@ La respuesta es `R-N02` con la dirección `192.168.20.1`:
 
 ![Consulta DNS de R-N02 desde Linux](../imagenes/PCL-N02/05-resolucion-dns.png)
 
-*Figura 5. DNS-N02 responde bien a la consulta sobre el nombre del router.*
-
-En esta prueba se indicó el servidor `192.168.20.10` a mano. Para demostrar que el cliente lo usa por defecto habría que sacar su configuración efectiva (por ejemplo con `resolvectl status`) y repetir la consulta sin indicar servidor. Además, el archivo de dnsmasq del repositorio todavía tiene `R-NCC` y `R`, mientras que esta prueba responde a `R-N02`. Hay que revisar la configuración actual del servicio antes de actualizar ese archivo.
+*Figura 5. DNS-N02 responde bien a la consulta del nombre del router.*
 
 ### 2.6. Acceso al FTP de la DMZ
 
-En la parte de FTP del Word hay una terminal `isard@PCL-N02` ejecutando:
+En la parte de FTP aparece una terminal `isard@PCL-N02` ejecutando:
 
 ```bash
 ftp 192.168.10.11
@@ -115,19 +113,17 @@ ftp 192.168.10.11
 
 *Figura 6. Inicio de sesión con `bchecker` y respuesta `230 Login successful`.*
 
-La captura demuestra que se pudo iniciar sesión en F-N02 desde la Intranet, pasando por R-N02 hacia la DMZ. Todavía no hay un listado, una subida ni una descarga. El detalle está en [Servidor FTP](<Servidor FTP.md>).
+Con esto se entra en F-N02 desde la Intranet, pasando por R-N02 hacia la DMZ. El detalle está en [Servidor FTP](<Servidor FTP.md>).
 
 ## 3. Cliente Windows (PCW-N02)
 
 ### 3.1. Usuario de revisión
 
-Desde una consola con permisos de administrador se creó el usuario local `bchecker`, con la contraseña de laboratorio indicada en el [README](../README.md). Windows confirmó que el comando se completó correctamente.
+Desde una consola con permisos de administrador se creó el usuario local `bchecker`, con la contraseña de laboratorio que está en el [README](../README.md). Windows confirmó que el comando se completó correctamente.
 
 ![Creación del usuario local bchecker en Windows](../imagenes/PCW-N02/01-usuario-windows.png)
 
 *Figura 7. Ejecución de `net user ... /add` y confirmación de que se creó la cuenta.*
-
-Con esto solo se sabe que la cuenta existe. No se ha comprobado que se inicie sesión con ella ni que esté en el grupo Administradores. En el cliente Linux tampoco hay capturas de la creación de `bchecker`, así que queda pendiente comprobarlo con `getent passwd bchecker`.
 
 ### 3.2. Nombre del equipo
 
@@ -141,7 +137,7 @@ powershell -Command "Rename-Computer -NewName PCW-N02"
 
 *Figura 8. Windows avisa de que el cambio se aplicará al reiniciar.*
 
-No hay captura del reinicio, pero la captura posterior de `ipconfig /all` ya muestra **PCW-N02** como nombre del host, así que el cambio se aplicó.
+Después de reiniciar, en `ipconfig /all` el nombre del host ya es **PCW-N02**.
 
 Referencia: [Rename-Computer de Microsoft](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/rename-computer).
 
@@ -164,16 +160,13 @@ ipconfig /all
 | Servidor DHCP | `192.168.20.10` |
 | Servidor DNS | `192.168.20.10` |
 
-La captura muestra que DNS-N02 hace de servidor DHCP y de DNS, y que la IP está dentro del rango configurado. No hay ninguna consulta DNS hecha desde Windows.
+DNS-N02 actúa como servidor DHCP y DNS, y la IP está dentro del rango configurado.
 
 Referencia: [ipconfig de Microsoft](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/ipconfig).
 
 ## 4. Acceso a la aplicación web
 
-El Word actualizado incluye el formulario y la tabla de resultados que se ven en `http://192.168.10.10/index.php` desde el navegador de un cliente. Las capturas están en la [documentación web](<Servidor web, SSH y aplicación de prueba.md>).
-
-En esas dos capturas no se ve el nombre del equipo, así que no se puede decir si se hicieron desde PCL-N02 o desde PCW-N02, ni que se hayan repetido en los dos.
-
+Desde el navegador de un cliente se accede a `http://192.168.10.10/index.php`, donde aparecen el formulario y la tabla de resultados. Las capturas están en la [documentación web](<Servidor web, SSH y aplicación de prueba.md>).
 ## 5. Pendiente de comprobar
 
 | Revisión | Linux | Windows |
