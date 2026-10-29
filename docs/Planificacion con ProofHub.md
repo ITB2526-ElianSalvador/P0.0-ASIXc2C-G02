@@ -7,7 +7,7 @@
 
 En el documento Word hay dos capturas del tablero de ProofHub que hemos utilizado para organizar el proyecto. En ellas se pueden ver las tareas repartidas entre los miembros del grupo, las fechas previstas y el estado de cada tarea.
 
-Las siguientes capturas muestran cómo estaba organizado el tablero cuando se hicieron. No he comprobado el tablero en línea, por lo que los estados pueden haber cambiado.
+Las siguientes capturas muestran cómo estaba organizado el tablero cuando se hicieron.
 
 ## 2. Organización de las tareas
 
