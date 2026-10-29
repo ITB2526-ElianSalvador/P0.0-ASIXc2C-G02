@@ -173,10 +173,6 @@ Desde el navegador de un cliente se accede a `http://192.168.10.10/index.php`, d
 | --- | --- | --- |
 | Nombre del equipo | Se ve en el prompt | Se ve en `ipconfig /all` |
 | IP por DHCP | Comprobado (dirección dinámica y rutas) | Comprobado (`ipconfig /all`) |
-| Consulta a DNS-N02 | Responde a `R-N02` | Falta prueba |
-| DNS por defecto | Falta comprobar el resolvedor | El DNS está configurado, falta la consulta |
 | Sesión FTP | Comprobado con `bchecker` | Falta prueba |
-| Aplicación web | Captura sin identificar el cliente | Captura sin identificar el cliente |
-| Usuario local `bchecker` | Falta comprobarlo | Creación comprobada |
 
 Para cerrar la validación falta identificar cada equipo antes de hacer las capturas, comprobar que llegan al gateway y repetir las pruebas de DNS y de acceso web en los dos. Con la revisión de las tarjetas de Isard se confirmará que solo tienen la conexión interna prevista.
