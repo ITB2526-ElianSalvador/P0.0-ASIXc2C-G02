@@ -8,7 +8,9 @@ El proyecto despliega en Isard una infraestructura para una aplicación web en c
 
 La aplicación muestra un formulario y un listado de equipamientos de educación después del acceso. La memoria distingue los resultados capturados de las configuraciones descritas y de las pruebas pendientes. El repositorio conserva la documentación en Markdown, los archivos de configuración disponibles y sus evidencias.
 
-![Plantilla Ubuntu Server seleccionada](../imagenes/Arquitectura (1).png)
+## Arquitectura del proyecto
+
+![Arquitectura del proyecto](imagenes/Arquitectura%20%281%29.png)
 
 ## Equipo
 
