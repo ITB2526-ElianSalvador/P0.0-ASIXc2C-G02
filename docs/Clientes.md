@@ -4,7 +4,7 @@
 
 ## 1. Objetivo y situación documentada
 
-Los clientes permiten comprobar los servicios de la infraestructura desde un puesto Linux y otro Windows. Ambos pertenecen a la Intranet `192.168.20.0/24`, asociada a ITB 1 en Isard, y deben utilizar R-N02 como puerta de enlace y DNS-N02 como servidor DNS y DHCP. El responsable asignado en el repositorio es Faiver.
+Los clientes permiten comprobar los servicios de la infraestructura desde un puesto Linux y otro Windows. Ambos pertenecen a la Intranet `192.168.20.0/24`, asociada a ITB 1 en Isard, y deben utilizar R-N02 como puerta de enlace y DNS-N02 como servidor DNS y DHCP.
 
 | Equipo | Sistema documentado | IPv4 observada | Asignación | Puerta de enlace |
 | --- | --- | --- | --- | --- |
