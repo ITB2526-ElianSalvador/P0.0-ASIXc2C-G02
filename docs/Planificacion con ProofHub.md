@@ -1,40 +1,49 @@
+
 # Planificación y seguimiento con ProofHub
 
 [Volver al proyecto](../README.md) · [Arquitectura y estado de validación](arquitectura.md)
 
-## 1. Uso documentado
+## 1. Uso de ProofHub
 
-El Word contiene dos capturas del tablero ProofHub del proyecto. Muestran tareas repartidas entre integrantes del equipo, fechas previstas y estados de seguimiento. El README asigna a Elian la parte de ProofHub y diagrama.
+En el documento Word hay dos capturas del tablero de ProofHub que hemos utilizado para organizar el proyecto. En ellas se pueden ver las tareas repartidas entre los miembros del grupo, las fechas previstas y el estado de cada tarea.
 
-Esta sección describe esas vistas conservadas en el documento. No se ha accedido al tablero en línea ni se considera que sus estados sigan siendo los actuales.
+Según el README, Elian se encarga de la parte de ProofHub y del diagrama de arquitectura.
+
+Las siguientes capturas muestran cómo estaba organizado el tablero cuando se hicieron. No he comprobado el tablero en línea, por lo que los estados pueden haber cambiado.
 
 ## 2. Organización de las tareas
 
-Las columnas visibles separan trabajo pendiente, asignado, en curso, bloqueado y pendiente de revisión. Entre las tarjetas se identifican:
+En el tablero las tareas están separadas según su estado: pendientes, asignadas, en curso, bloqueadas y pendientes de revisión.
+
+Entre las tareas que aparecen están las siguientes:
 
 - Configuración de R-N02 y diagrama de arquitectura.
-- Preparación de las VMs y servicios DNS y DHCP.
-- Creación de W-N02, Apache, PHP y SSH.
+- Preparación de las máquinas virtuales y los servicios DNS y DHCP.
+- Configuración de W-N02 con Apache, PHP y SSH.
 - Preparación de la base de datos y carga del CSV.
-- Servidor FTP F-N02.
-- Clientes Linux y Windows.
-- Aplicación web con login y listado.
+- Configuración del servidor FTP F-N02.
+- Configuración de los clientes Linux y Windows.
+- Desarrollo de la aplicación web con inicio de sesión y listado de datos.
 - Conexión SSH de W-N02 con GitHub y documentación en Markdown.
 
 ![Primera vista del tablero del proyecto](../imagenes/ProofHub/01-tablero-proyecto.png)
 
-*Figura 1. Vista de tareas por estado, con responsables y fechas previstas. El diagrama de arquitectura figura en la columna de revisión.*
+*Figura 1. Primera captura del tablero, donde se ven las tareas, sus responsables, las fechas y su estado. El diagrama de arquitectura aparece pendiente de revisión.*
 
 ![Segunda vista del seguimiento del proyecto](../imagenes/ProofHub/02-tablero-seguimiento.png)
 
-*Figura 2. Otra vista del tablero, con tareas de infraestructura, clientes y aplicación.*
+*Figura 2. Segunda captura del tablero con las tareas relacionadas con la infraestructura, los clientes y la aplicación web.*
 
 ## 3. Relación con la entrega técnica
 
-Una tarea situada en revisión requiere comprobar sus resultados antes de considerarla cerrada. Las capturas técnicas más recientes del Word pueden acreditar avances que todavía no se reflejen en estas vistas del tablero.
+Las tareas que aparecen pendientes de revisión todavía tienen que comprobarse antes de darlas por terminadas. Además, las capturas más recientes del documento Word pueden mostrar avances que aún no aparecen reflejados en ProofHub.
 
-Por ello, el estado documental se establece a partir de los resultados observados: login FTP correcto, aplicación web visible y parámetros DHCP de los clientes, entre otros. No se da por completada una tarea solo por su posición en ProofHub, ni por finalizado el proyecto porque exista un tablero.
+Por eso, para saber qué partes de la práctica funcionan, también he tenido en cuenta las pruebas realizadas. Por ejemplo, el inicio de sesión en el servidor FTP, el funcionamiento de la aplicación web y la configuración DHCP de los clientes.
+
+No doy una tarea por terminada únicamente porque aparezca en una columna del tablero. También hay que comprobar que la configuración funciona y que las pruebas se han realizado correctamente.
 
 ## 4. Seguimiento pendiente
 
-Para cerrar la planificación conviene asociar a cada tarea su documento, su configuración y una prueba de aceptación. Queda pendiente una vista actualizada que muestre la revisión final de las tareas y permita contrastarla con las evidencias del repositorio.
+Para terminar de organizar el proyecto, queda revisar el estado de las tareas y comprobar que cada una tiene su documentación y sus pruebas correspondientes.
+
+También falta una captura actualizada de ProofHub donde se vea la revisión final de las tareas. Así se podrá comparar el estado del tablero con los archivos y las pruebas que hay guardados en el repositorio.
