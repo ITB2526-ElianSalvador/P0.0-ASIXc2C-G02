@@ -4,7 +4,7 @@
 
 ## 1. Objetivo
 
-W-N02 aloja una aplicación PHP servida con Apache. El formulario pide usuario y contraseña para acceder a un listado de equipamientos de educación, y la aplicación se conecta al servidor de base de datos de la Intranet. El responsable en el repositorio es Faiver.
+W-N02 aloja una aplicación PHP servida con Apache. El formulario pide usuario y contraseña para acceder a un listado de equipamientos de educación, y la aplicación se conecta al servidor de base de datos de la Intranet.
 
 | Parámetro | Valor |
 | --- | --- |
