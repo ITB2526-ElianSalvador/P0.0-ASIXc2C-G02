@@ -32,10 +32,3 @@ Entre las tareas que aparecen están las siguientes:
 
 *Figura 2. Segunda captura del tablero con las tareas relacionadas con la infraestructura, los clientes y la aplicación web.*
 
-## 3. Relación con la entrega técnica
-
-Las tareas que aparecen pendientes de revisión todavía tienen que comprobarse antes de darlas por terminadas. Además, las capturas más recientes del documento Word pueden mostrar avances que aún no aparecen reflejados en ProofHub.
-
-Por eso, para saber qué partes de la práctica funcionan, también he tenido en cuenta las pruebas realizadas. Por ejemplo, el inicio de sesión en el servidor FTP, el funcionamiento de la aplicación web y la configuración DHCP de los clientes.
-
-No doy una tarea por terminada únicamente porque aparezca en una columna del tablero. También hay que comprobar que la configuración funciona y que las pruebas se han realizado correctamente.
