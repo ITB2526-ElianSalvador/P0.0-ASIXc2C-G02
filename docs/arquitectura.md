@@ -1,81 +1,111 @@
+
 # Arquitectura de la infraestructura
 
 [Volver al proyecto](../README.md) · [Inventario de configuración](<Ficheros de configuración.md>)
 
-## 1. Diseño y alcance
+## 1. Diseño de la infraestructura
 
-El proyecto despliega una infraestructura virtual en Isard con tres segmentos: una red exterior de salida, una DMZ para servicios y una Intranet para clientes y servicios internos. R-N02 comunica esos segmentos. La aplicación web se aloja en W-N02 y apunta a una base de datos situada en B-N02.
+En este proyecto he montado una infraestructura de red en Isard con tres partes: la red exterior, la DMZ y la Intranet. Cada una tiene una función diferente y el router R-N02 se encarga de comunicar las redes.
 
-**Estado: diseño documentado y validación funcional parcial.** El esquema siguiente se reconstruye a partir del README, la documentación existente y `Explicación i Capturas(2).docx`. No es una captura de un diagrama original de Isard ni acredita por sí mismo que todas las tarjetas y reglas estén configuradas así.
+En la DMZ están el servidor web W-N02 y el servidor FTP F-N02. En la Intranet están el servidor DNS y DHCP DNS-N02, el servidor de base de datos B-N02 y los dos equipos cliente, uno con Linux y otro con Windows.
 
-## 2. Segmentos de red
+**Estado del proyecto:** la infraestructura está documentada y algunas pruebas ya funcionan, aunque todavía quedan comprobaciones por hacer.
 
-| Segmento | Red de Isard | Direccionamiento | Función |
-| --- | --- | --- | --- |
-| Exterior | Default | DHCP del entorno | Proporcionar salida al router. |
-| DMZ | ITB 2 | `192.168.10.0/24` | Alojar el servidor web y el FTP. |
-| Intranet | ITB 1 | `192.168.20.0/24` | Alojar DNS y DHCP, base de datos y clientes. |
+El siguiente esquema representa cómo está organizada la red según la documentación y las capturas de la práctica.
+
+## 2. Redes utilizadas
+
+| Segmento | Red de Isard | Dirección de red | Función |
+|---|---|---|---|
+| Exterior | Default | DHCP | Dar salida a Internet al router. |
+| DMZ | ITB 2 | `192.168.10.0/24` | Servidor web y servidor FTP. |
+| Intranet | ITB 1 | `192.168.20.0/24` | DNS, DHCP, base de datos y clientes. |
 
 ```mermaid
 flowchart TD
-    EXT["Default de Isard con salida a internet"] -->|"enp1s0 por DHCP"| R["R-N02"]
+    EXT["Default de Isard<br/>Salida a Internet"] -->|"enp1s0 por DHCP"| R["R-N02"]
     R -->|"enp2s0: 192.168.10.1/24"| DMZ["ITB 2: DMZ"]
     R -->|"enp3s0: 192.168.20.1/24"| LAN["ITB 1: Intranet"]
-    DMZ --> PUB["W-N02 web y F-N02 FTP"]
-    LAN --> SRV["DNS-N02 y B-N02"]
+    DMZ --> WEB["W-N02: servidor web"]
+    DMZ --> FTP["F-N02: servidor FTP"]
+    LAN --> DNS["DNS-N02: DNS y DHCP"]
+    LAN --> DB["B-N02: base de datos"]
     LAN --> CLI["PCL-N02 y PCW-N02"]
 ```
 
-La asignación de interfaces del router es la descrita en su [memoria](router.md). El diseño final prevé una sola conexión interna para cada VM que no sea el router. El Word también describe una conexión Default temporal durante la preparación de la base de datos; falta una captura que confirme su retirada en la configuración final.
+El router tiene tres interfaces: una para la red exterior, otra para la DMZ y otra para la Intranet. Las direcciones y los nombres de las interfaces están explicados con más detalle en la [documentación del router](router.md).
 
-La separación en segmentos define el direccionamiento. Para afirmar que existe aislamiento entre DMZ e Intranet hacen falta las reglas efectivas de filtrado y pruebas de accesos permitidos y bloqueados.
+La idea es que las máquinas virtuales que no son el router tengan una sola conexión a su red correspondiente. En la documentación también aparece una conexión temporal a Default durante la preparación de la base de datos. Me falta comprobar que esa conexión se haya quitado en la configuración final.
 
-## 3. Inventario de equipos
+Aunque las redes estén separadas, todavía tengo que revisar las reglas del firewall y comprobar qué conexiones se permiten entre la DMZ y la Intranet.
 
-| Equipo previsto | Servicio o función | Segmento | IPv4 | Puerta de enlace |
-| --- | --- | --- | --- | --- |
-| R-N02 | Router y NAT | Exterior, DMZ e Intranet | DHCP; `192.168.10.1`; `192.168.20.1` | Recibida por DHCP en el enlace exterior. |
-| W-N02 | Apache, PHP y aplicación; SSH previsto | DMZ | `192.168.10.10/24` | `192.168.10.1` |
-| F-N02 | vsftpd | DMZ | `192.168.10.11/24` | `192.168.10.1` |
-| DNS-N02 | DNS y DHCP con dnsmasq | Intranet | `192.168.20.10/24` | `192.168.20.1` |
-| B-N02 | Base de datos MySQL prevista | Intranet | `192.168.20.20/24`, según el esquema y el destino de la aplicación. | `192.168.20.1`, según el diseño. |
-| PCL-N02 | Cliente Linux | Intranet | DHCP; observada `192.168.20.112/24` | `192.168.20.1` |
-| PCW-N02 | Cliente Windows | Intranet | DHCP; observada `192.168.20.148/24` | `192.168.20.1` |
+## 3. Equipos de la infraestructura
 
-Las capturas del servidor de base de datos muestran el nombre **B-NCC**, no B-N02. El nombre definitivo y la dirección realmente aplicada deben contrastarse con esa VM. Las direcciones de clientes son concesiones temporales, no reservas acreditadas.
+Esta es la lista de máquinas que forman parte del proyecto y las direcciones IP que aparecen en la documentación.
 
-## 4. Relaciones entre servicios
+| Equipo | Función | Red | Dirección IP | Puerta de enlace |
+|---|---|---|---|---|
+| R-N02 | Router y NAT | Exterior, DMZ e Intranet | DHCP en el exterior; `192.168.10.1` y `192.168.20.1` en las redes internas | Recibida por DHCP en el exterior. |
+| W-N02 | Apache, PHP y aplicación web | DMZ | `192.168.10.10/24` | `192.168.10.1` |
+| F-N02 | Servidor FTP con vsftpd | DMZ | `192.168.10.11/24` | `192.168.10.1` |
+| DNS-N02 | Servidor DNS y DHCP con dnsmasq | Intranet | `192.168.20.10/24` | `192.168.20.1` |
+| B-N02 | Servidor de base de datos MySQL | Intranet | `192.168.20.20/24`, según el esquema del proyecto | `192.168.20.1`, según el diseño |
+| PCL-N02 | Cliente Linux | Intranet | `192.168.20.112/24`, recibida por DHCP | `192.168.20.1` |
+| PCW-N02 | Cliente Windows | Intranet | `192.168.20.148/24`, recibida por DHCP | `192.168.20.1` |
 
-| Origen | Destino | Servicio | Recorrido lógico previsto |
-| --- | --- | --- | --- |
-| Clientes de la Intranet | DNS-N02 | DHCP | Dentro de ITB 1; no requiere un relay entre estas máquinas. |
-| Clientes de la Intranet | DNS-N02 | DNS | Consulta local al servidor `192.168.20.10`. |
-| Cliente de la Intranet | W-N02 | HTTP | Intranet → R-N02 → DMZ. |
-| PCL-N02 | F-N02 | FTP | Intranet → R-N02 → DMZ. |
-| W-N02 | B-N02 | Conexión MySQL mediante PHP | DMZ → R-N02 → Intranet. |
-| Equipos internos | Red exterior | Tráfico de salida | Gateway de su segmento → R-N02 → Default; NAT al salir por `enp1s0`. |
+Las IP de los clientes son las que aparecen en las capturas y pueden cambiar porque se asignan mediante DHCP.
 
-La captura del código PHP utiliza `192.168.20.20` como destino y `equipaments` como base de datos. La página muestra una tabla después del login. Es evidencia coherente con el flujo web a base de datos, pero faltan el código completo, la configuración de escucha y los permisos MySQL para reproducirlo de extremo a extremo.
+Hay un detalle que tengo que revisar: en las capturas del servidor de base de datos aparece el nombre **B-NCC** en vez de B-N02. Tengo que comprobar el nombre real de esa máquina y su dirección IP antes de dar por terminado el inventario.
 
-## 5. Administración y preparación
+## 4. Comunicación entre los equipos
 
-El proyecto utiliza el usuario de revisión `bchecker`, con las credenciales de laboratorio descritas en el README. Las capturas permiten comprobar su creación en varios servidores y en Windows; la comprobación específica de la cuenta en el cliente Linux sigue pendiente.
+En esta tabla se resumen las conexiones que necesita la infraestructura para funcionar.
 
-El Word describe el uso del bastión de Isard y claves SSH para preparar la VM de base de datos. Esa vía de administración no se representa como una cuarta red de aplicación. Tampoco equivale a una prueba de SSH contra W-N02 ni a una conexión SSH del servidor web con GitHub.
+| Origen | Destino | Servicio | Cómo se comunica |
+|---|---|---|---|
+| Clientes | DNS-N02 | DHCP | Los clientes reciben la configuración de red desde la Intranet. |
+| Clientes | DNS-N02 | DNS | Consultan los nombres de los equipos al servidor `192.168.20.10`. |
+| Clientes | W-N02 | HTTP | La conexión pasa desde la Intranet por R-N02 hasta la DMZ. |
+| PCL-N02 | F-N02 | FTP | El cliente Linux accede al servidor FTP a través de R-N02. |
+| W-N02 | B-N02 | MySQL | La aplicación PHP se conecta a la base de datos de la Intranet. |
+| Equipos internos | Red exterior | Salida a Internet | El tráfico pasa por R-N02, que utiliza NAT para salir por la interfaz exterior. |
 
-El procedimiento de red se amplía en [Router](router.md), [DNS y DHCP](<DNS y DHCP.md>), [Clientes](Clientes.md), [FTP](<Servidor FTP.md>) y [Web y aplicación](<Servidor web, SSH y aplicación de prueba.md>).
+En las capturas del código PHP aparece la dirección `192.168.20.20` como destino de la base de datos y el nombre `equipaments`. También se ve la tabla de datos después de iniciar sesión en la aplicación.
 
-## 6. Evidencias y validación pendiente
+Esto indica que la aplicación está preparada para consultar la base de datos. Para comprobar que todo funciona correctamente, todavía tengo que revisar la configuración completa de MySQL, los permisos del usuario y que la conexión se pueda repetir sin errores.
 
-| Componente o relación | Evidencia disponible | Pendiente para cerrar la validación |
-| --- | --- | --- |
-| Router | Reenvío IPv4 aplicado, comando NAT y guardado de reglas. | Interfaces efectivas, reglas completas y prueba tras reinicio. |
-| DHCP de clientes | IP dinámica y rutas Linux; `ipconfig /all` de Windows. | Nueva comprobación tras renovar las concesiones, si se requiere reproducibilidad. |
-| DNS | Consulta a DNS-N02 con respuesta de R-N02. | Contrastar el alias con dnsmasq y consultar desde Windows. |
-| FTP | Servicio activo e inicio de sesión desde PCL-N02. | Listado, subida, descarga y prueba desde Windows. |
-| Web | Apache activo, formulario y tabla tras login. | Identificar el cliente de prueba y repetir en Linux y Windows. |
-| Base de datos | Historial de preparación e importación intentada; destino visible en PHP. | Hostname final, IP efectiva, servicio, esquema, usuarios, permisos y carga reproducible. |
-| SSH en W-N02 | Función prevista en el proyecto. | Instalación, configuración efectiva y sesión remota acreditada. |
-| Filtrado entre redes | No hay exportación completa. | Definir y comprobar la política de acceso. |
+## 5. Administración de los servidores
 
-Las capturas del [tablero ProofHub](<Planificacion con ProofHub.md>) muestran un diagrama de arquitectura pendiente de revisión en una de las vistas. Esa posición en el tablero no acredita una aceptación final. Esta memoria permite describir el diseño actual y delimitar qué queda por verificar.
+Durante la práctica he utilizado el usuario `bchecker` para realizar algunas comprobaciones. En las capturas se ve su creación en varios equipos y en Windows, aunque todavía me falta comprobar si también está creado en el cliente Linux.
+
+Para preparar la máquina de la base de datos, la documentación explica que se utilizó el bastión de Isard y las claves SSH. Este acceso se utilizó para administrar la máquina durante la preparación.
+
+También queda pendiente comprobar el acceso SSH al servidor web W-N02, ya que es uno de los servicios previstos en el proyecto.
+
+Para ver cómo he configurado cada parte, se pueden consultar estos apartados:
+
+- [Router](router.md)
+- [DNS y DHCP](<DNS y DHCP.md>)
+- [Clientes](Clientes.md)
+- [Servidor FTP](<Servidor FTP.md>)
+- [Servidor web, SSH y aplicación de prueba](<Servidor web, SSH y aplicación de prueba.md>)
+
+## 6. Pruebas realizadas y comprobaciones pendientes
+
+Estas son las pruebas que aparecen en la documentación y lo que me falta revisar para terminar la práctica.
+
+| Componente | Lo que he comprobado | Lo que falta |
+|---|---|---|
+| Router | Se ha configurado el reenvío IPv4 y NAT, y se han guardado las reglas. | Revisar las interfaces y comprobar que las reglas siguen funcionando después de reiniciar. |
+| DHCP | Linux recibe una IP dinámica y Windows muestra su configuración con `ipconfig /all`. | Comprobar de nuevo las concesiones si es necesario. |
+| DNS | La consulta desde Linux devuelve la IP de R-N02. | Revisar el nombre configurado en dnsmasq y probar desde Windows. |
+| FTP | El servicio está activo y el inicio de sesión desde Linux funciona. | Probar el listado de archivos, la subida, la descarga y el acceso desde Windows. |
+| Servidor web | Apache está activo y se ha mostrado el formulario y la tabla de la aplicación. | Repetir la prueba desde los dos clientes y guardar las capturas. |
+| Base de datos | Hay documentación de la preparación y el código PHP muestra la dirección de destino. | Comprobar el nombre de la máquina, la IP, MySQL, las tablas y los permisos. |
+| SSH en W-N02 | El acceso está previsto en el proyecto. | Comprobar la configuración y realizar una conexión remota. |
+| Firewall | La infraestructura tiene las redes separadas. | Revisar las reglas y comprobar qué conexiones se permiten y cuáles se bloquean. |
+
+En el tablero de [ProofHub](<Planificacion con ProofHub.md>) también hay un diagrama de la arquitectura que aparece pendiente de revisión. Por eso, todavía tengo que comprobar que coincide con la configuración final.
+
+Con estas comprobaciones podré terminar de validar la infraestructura y asegurarme de que los equipos se comunican correctamente según el diseño del proyecto.
+
