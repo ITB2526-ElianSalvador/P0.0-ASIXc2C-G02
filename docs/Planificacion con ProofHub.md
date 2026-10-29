@@ -39,9 +39,3 @@ Las tareas que aparecen pendientes de revisión todavía tienen que comprobarse 
 Por eso, para saber qué partes de la práctica funcionan, también he tenido en cuenta las pruebas realizadas. Por ejemplo, el inicio de sesión en el servidor FTP, el funcionamiento de la aplicación web y la configuración DHCP de los clientes.
 
 No doy una tarea por terminada únicamente porque aparezca en una columna del tablero. También hay que comprobar que la configuración funciona y que las pruebas se han realizado correctamente.
-
-## 4. Seguimiento pendiente
-
-Para terminar de organizar el proyecto, queda revisar el estado de las tareas y comprobar que cada una tiene su documentación y sus pruebas correspondientes.
-
-También falta una captura actualizada de ProofHub donde se vea la revisión final de las tareas. Así se podrá comparar el estado del tablero con los archivos y las pruebas que hay guardados en el repositorio.
