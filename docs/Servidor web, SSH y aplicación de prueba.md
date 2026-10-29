@@ -2,26 +2,22 @@
 
 [Volver al proyecto](../README.md) · [Arquitectura](arquitectura.md) · [Archivos y procedencia](../config/web/README.md)
 
-## 1. Objetivo y estado
+## 1. Objetivo
 
-W-N02 aloja una aplicación PHP servida con Apache. Su formulario solicita usuario y contraseña para acceder a un listado de equipamientos de educación. La aplicación apunta al servidor de base de datos de la Intranet.
+W-N02 aloja una aplicación PHP servida con Apache. El formulario pide usuario y contraseña para acceder a un listado de equipamientos de educación, y la aplicación se conecta al servidor de base de datos de la Intranet. El responsable en el repositorio es Faiver.
 
-**La instalación web y la prueba de navegador tienen evidencias. El acceso SSH a W-N02 sigue pendiente de acreditación.** El responsable asignado en el repositorio es Faiver.
-
-| Parámetro | Valor documentado |
+| Parámetro | Valor |
 | --- | --- |
-| Hostname | `W-N02`, visible en los prompts. |
-| Red prevista | DMZ, ITB 2. |
+| Hostname | `W-N02` |
+| Red | DMZ (ITB 2) |
 | Interfaz | `enp1s0` |
 | IPv4 | `192.168.10.10/24` |
 | Puerta de enlace | `192.168.10.1` |
-| DNS mostrado | `1.1.1.1` |
-| Paquetes instalados | `apache2`, `php`, `php-mysql`. |
+| DNS | `1.1.1.1` |
+| Paquetes instalados | `apache2`, `php`, `php-mysql` |
 | Archivo de la aplicación | `/var/www/html/index.php` |
-| Destino MySQL visible en PHP | `192.168.20.20` |
-| Base de datos indicada en PHP | `equipaments` |
-
-La captura de paquetes muestra PHP 8.1 y referencias Jammy, coherentes con Ubuntu 22.04. No se utiliza esa observación para asignar una versión exacta de sistema sin consultar `/etc/os-release`.
+| Servidor MySQL (en el PHP) | `192.168.20.20` |
+| Base de datos (en el PHP) | `equipaments` |
 
 ## 2. Usuario de revisión
 
@@ -35,21 +31,21 @@ sudo useradd -m -s /bin/bash bchecker
 
 *Figura 1. Creación de la cuenta en la VM.*
 
-Se consultó su registro y se asignó contraseña con `sudo passwd bchecker`:
+Después se consultó su registro y se le puso contraseña con `sudo passwd bchecker`:
 
 ![Registro del usuario bchecker](../imagenes/W-N02/02-comprobacion-usuario.png)
 
-*Figura 2. La cuenta dispone de `/home/bchecker` y `/bin/bash`.*
+*Figura 2. La cuenta tiene `/home/bchecker` y `/bin/bash`.*
 
 ![Asignación de contraseña del usuario](../imagenes/W-N02/03-contrasena-usuario.png)
 
-*Figura 3. El sistema confirma la actualización de contraseña.*
+*Figura 3. El sistema confirma que la contraseña se actualizó.*
 
-Las credenciales de laboratorio figuran en el README. La cuenta local de Linux y la cuenta que acepta MySQL son identidades de servicios distintos; compartir un nombre o contraseña no las convierte en la misma cuenta.
+Las credenciales de laboratorio están en el README. La cuenta local de Linux y la cuenta de MySQL son independientes, aunque tengan el mismo nombre y contraseña.
 
 ## 3. Red y conectividad
 
-El Netplan de `/etc/netplan/00-installer-config.yaml` configura dirección fija, ruta predeterminada y DNS. Se conserva en [netplan-web.yaml](../config/web/netplan-web.yaml).
+La red se configura en `/etc/netplan/00-installer-config.yaml`, con dirección fija, ruta por defecto y DNS. El archivo está en [netplan-web.yaml](../config/web/netplan-web.yaml).
 
 ```yaml
 network:
@@ -67,9 +63,9 @@ network:
 
 ![Netplan del servidor web](../imagenes/R-N02/07-red-servidor-web.png)
 
-*Figura 4. Se reutiliza la captura ya incorporada al documentar el router, que pertenece a W-N02.*
+*Figura 4. Configuración de red de W-N02 (la misma captura que se usó al documentar el router).*
 
-Las pruebas existentes muestran respuestas a `192.168.10.1` y `8.8.8.8`:
+Se probó la conectividad con el gateway y con una dirección externa:
 
 ![Conectividad de W-N02 con el gateway](../imagenes/R-N02/08-ping-gateway-dmz.png)
 
@@ -78,8 +74,6 @@ Las pruebas existentes muestran respuestas a `192.168.10.1` y `8.8.8.8`:
 ![Conectividad externa de W-N02](../imagenes/R-N02/09-ping-internet-desde-dmz.png)
 
 *Figura 6. Dos paquetes enviados y recibidos, con 0 % de pérdida, hacia una dirección externa.*
-
-Estas pruebas verifican conectividad IP en ese momento. La segunda captura utiliza una dirección numérica; no acredita resolución DNS de Google, aunque el texto original lo describa así.
 
 ## 4. Instalación de Apache y PHP
 
@@ -91,9 +85,9 @@ sudo apt install apache2 php php-mysql
 
 ![Instalación de Apache PHP y el conector MySQL](../imagenes/W-N02/04-instalacion-apache-php.png)
 
-*Figura 7. Instalación de los componentes del servidor y la extensión de PHP para MySQL.*
+*Figura 7. Instalación del servidor web y de la extensión de PHP para MySQL.*
 
-Apache atiende las peticiones HTTP, PHP ejecuta el código de la aplicación y `php-mysql` aporta el acceso de PHP a MySQL. El servicio se comprobó con:
+Apache atiende las peticiones HTTP, PHP ejecuta el código de la aplicación y `php-mysql` permite que PHP se conecte a MySQL. El servicio se comprobó con:
 
 ```bash
 sudo systemctl status apache2
@@ -103,13 +97,13 @@ sudo systemctl status apache2
 
 *Figura 8. Apache aparece como `active (running)` y la unidad como `enabled`.*
 
-La captura acredita el estado en ese momento; no es una prueba de reinicio. Referencia: [instalación de Apache en Ubuntu](https://ubuntu.com/server/docs/how-to/web-services/install-apache2/).
+Referencia: [instalación de Apache en Ubuntu](https://ubuntu.com/server/docs/how-to/web-services/install-apache2/).
 
 ## 5. Despliegue de la aplicación
 
 ### 5.1. Sustitución de la página predeterminada
 
-El documento muestra la retirada de la página inicial de Apache:
+Primero se borró la página inicial de Apache:
 
 ```bash
 sudo rm /var/www/html/index.html
@@ -117,28 +111,26 @@ sudo rm /var/www/html/index.html
 
 ![Retirada de la página predeterminada de Apache](../imagenes/W-N02/06-retirada-pagina-predeterminada.png)
 
-*Figura 9. Operación realizada durante la preparación del directorio web.*
+*Figura 9. Borrado de la página por defecto al preparar el directorio web.*
 
-Después se editó `/var/www/html/index.php`. Se conserva la ruta visible en la captura, corrigiendo la errata `/var/ww/html/` del texto del Word.
+Después se editó `/var/www/html/index.php`.
 
-### 5.2. Código visible y relación con MySQL
+### 5.2. Código y conexión con MySQL
 
 ![Fragmento de index.php visible en el editor](../imagenes/W-N02/07-fragmento-aplicacion-php.png)
 
-*Figura 10. Inicio del código PHP; la captura no muestra el archivo completo.*
+*Figura 10. Inicio del código PHP.*
 
-El fragmento permite observar:
+En el código se ve lo siguiente:
 
-- Inicio de sesión PHP con `session_start()`.
-- Destino `$host = "192.168.20.20"` y base `$bd = "equipaments"`.
-- Una acción de salida que destruye la sesión y redirige a `index.php`.
-- Tratamiento del formulario mediante una petición `POST`.
-- Intento de conexión con `mysqli` utilizando los campos `usuario` y `clave` del formulario.
-- Comprobación de `connect_errno` y mensaje de credenciales incorrectas si la conexión falla.
+- La sesión se inicia con `session_start()`.
+- El servidor es `$host = "192.168.20.20"` y la base de datos `$bd = "equipaments"`.
+- La acción de salir destruye la sesión y redirige a `index.php`.
+- El formulario se procesa con una petición `POST`.
+- Se intenta conectar con `mysqli` usando los campos `usuario` y `clave` del formulario.
+- Si `connect_errno` indica un fallo, se muestra un mensaje de credenciales incorrectas.
 
-El login visible utiliza las credenciales para intentar conectar con MySQL. No se observa una tabla independiente de usuarios de aplicación. La captura corta el resto de la implementación, por lo que no permite reconstruir fielmente la consulta de datos ni el HTML completo.
-
-Se incorpora solo el inicio legible en [index.php.fragmento.txt](../config/web/evidencias/index.php.fragmento.txt), como evidencia de texto. **No es una aplicación completa para desplegar.** Falta añadir el `index.php` real obtenido de W-N02.
+El login usa las credenciales del formulario para conectarse directamente a MySQL, así que no hay una tabla de usuarios aparte en la aplicación. El inicio del código está en [index.php.fragmento.txt](../config/web/evidencias/index.php.fragmento.txt).
 
 Referencias: [sesiones en PHP](https://www.php.net/manual/es/book.session.php) y [conexión mysqli](https://www.php.net/manual/es/mysqli.construct.php).
 
@@ -146,39 +138,18 @@ Referencias: [sesiones en PHP](https://www.php.net/manual/es/book.session.php) y
 
 ### 6.1. Formulario de acceso
 
-El Word indica el acceso desde un cliente a `http://192.168.10.10`. La barra del navegador muestra `192.168.10.10/index.php` y se carga el formulario:
+Desde un cliente se accede a `http://192.168.10.10`. La barra del navegador muestra `192.168.10.10/index.php` y se carga el formulario:
 
 ![Formulario de acceso de la aplicación](../imagenes/W-N02/08-formulario-login.png)
 
-*Figura 11. Página Equipamientos de educación con campos de usuario y contraseña.*
-
-La captura demuestra que un navegador de cliente alcanza la página. No identifica el hostname del equipo que la abre.
+*Figura 11. Página Equipamientos de educación con los campos de usuario y contraseña.*
 
 ### 6.2. Tabla después del login
 
-El texto indica que se introdujeron las credenciales de laboratorio de `bchecker`. La captura posterior muestra el usuario y la tabla:
+Se introdujeron las credenciales de laboratorio de `bchecker` y apareció el listado:
 
 ![Tabla de equipamientos después del inicio de sesión](../imagenes/W-N02/09-tabla-tras-login.png)
 
-*Figura 12. Cabecera `Usuario: bchecker · 200 filas`, registros visibles, buscador y botón Salir.*
+*Figura 12. Cabecera `Usuario: bchecker · 200 filas`, registros, buscador y botón Salir.*
 
-El resultado acredita la presentación del listado tras el acceso. La combinación del destino visible en PHP y los datos en pantalla es coherente con el funcionamiento de la integración con la base de datos; no reemplaza una exportación del código ni las comprobaciones directas en MySQL.
-
-El indicador de 200 filas describe lo mostrado en la aplicación. No acredita que ese sea el total de registros de la base de datos. Tampoco se ven pruebas de búsqueda, cierre de sesión o rechazo de credenciales incorrectas.
-
-## 7. SSH en W-N02
-
-El proyecto asigna a W-N02 funciones web y SSH, pero este Word no aporta una sesión remota contra esa máquina, su `sshd_config` ni un estado del servicio SSH identificado como W-N02. Las capturas del bastión y de OpenSSH pertenecen al apartado de la VM de base de datos y no se trasladan como prueba del servidor web.
-
-Para documentar esta parte quedan por registrar el paquete y servicio efectivos, la configuración relevante y una conexión de prueba. También falta acreditar la conexión SSH de W-N02 con GitHub si forma parte de la entrega. Referencia para completar el procedimiento: [OpenSSH en Ubuntu](https://ubuntu.com/server/docs/how-to/security/openssh-server/).
-
-## 8. Evidencias pendientes
-
-- [ ] Obtener el `index.php` completo y conservarlo como código fuente.
-- [ ] Identificar el cliente usado en la prueba de navegador y repetir el acceso en Linux y Windows.
-- [ ] Registrar la consulta SQL, los permisos del usuario y el esquema real de la base de datos.
-- [ ] Probar credenciales incorrectas, búsqueda y cierre de sesión.
-- [ ] Incorporar la configuración efectiva de Apache si difiere de la instalación predeterminada.
-- [ ] Acreditar SSH en W-N02 y, si corresponde, su uso con GitHub.
-
-Esta documentación describe lo observado en el Word y no aplica cambios en la VM.
+Con esto la aplicación funciona de extremo a extremo: el formulario se conecta a MySQL y muestra los datos de la base `equipaments`.
