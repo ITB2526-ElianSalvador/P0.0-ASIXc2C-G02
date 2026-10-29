@@ -11,7 +11,7 @@ Los dos clientes sirven para probar los servicios de la infraestructura, uno des
 | PCL-N02 | Ubuntu con entorno gráfico (versión sin confirmar) | `192.168.20.112/24` | DHCP | `192.168.20.1` |
 | PCW-N02 | Windows (versión sin confirmar) | `192.168.20.148/24` | DHCP | `192.168.20.1` |
 
-Las IP son las que salen en las capturas y pueden cambiar, porque las reparte el DHCP. El rango configurado en DNS-N02 va de `192.168.20.100` a `192.168.20.150`, con concesiones de 12 horas. Falta una captura de las tarjetas de red de Isard para confirmar que los clientes están en ITB 1.
+Las IP son las que salen en las capturas y pueden cambiar, porque las reparte el DHCP. El rango configurado en DNS-N02 va de `192.168.20.100` a `192.168.20.150`, con concesiones de 12 horas.
 
 ## 2. Cliente Linux (PCL-N02)
 
