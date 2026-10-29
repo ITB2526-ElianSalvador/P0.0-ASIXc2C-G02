@@ -1,29 +1,32 @@
+
 # Servidor FTP F-N02
 
 [Volver al proyecto](../README.md) · [Arquitectura](arquitectura.md) · [Archivos de configuración](../config/ftp/README.md)
 
 ## 1. Objetivo y entorno
 
-F-N02 proporciona el servicio de transferencia de archivos del proyecto mediante **vsftpd**. Está situado en la DMZ, junto al servidor web, y utiliza R-N02 para acceder a otras redes.
+En esta parte de la práctica he configurado el servidor FTP F-N02 utilizando **vsftpd**. Este servidor está en la DMZ, junto al servidor web, y permite transferir archivos entre los equipos de la red. Para comunicarse con otras redes utiliza el router R-N02.
 
-| Parámetro | Valor documentado |
+| Parámetro | Valor |
 | --- | --- |
 | Hostname | `F-N02` |
-| Red de Isard prevista | ITB 2 |
+| Red de Isard | ITB 2 |
 | Segmento | `192.168.10.0/24` |
 | Interfaz del servidor | `enp1s0` |
-| Dirección fija | `192.168.10.11/24` |
+| Dirección IP | `192.168.10.11/24` |
 | Puerta de enlace | `192.168.10.1` |
-| DNS mostrado | `1.1.1.1` |
-| Software observado | vsftpd `3.0.5` |
+| DNS | `1.1.1.1` |
+| Versión de vsftpd | `3.0.5` |
 
-La instalación utiliza paquetes del repositorio Ubuntu Jammy, correspondiente a Ubuntu 22.04. La edición y versión exactas de la VM se deben confirmar con `/etc/os-release`. El reparto inicial asigna FTP a Elias; las nuevas capturas aparecen en la sección de Elian del Word. Esta memoria conserva el reparto del repositorio sin deducir un cambio formal de responsable.
+Para instalar el servicio se utilizaron los paquetes del repositorio de Ubuntu Jammy, que corresponde a Ubuntu 22.04. La versión exacta del sistema instalado en la máquina se puede comprobar con el archivo `/etc/os-release`.
+
+En el reparto inicial de la práctica, el servidor FTP estaba asignado a Elias. Las capturas más recientes aparecen en la sección de Elian del documento Word, pero en esta documentación mantengo el reparto que aparece en el repositorio.
 
 ## 2. Preparación de la máquina
 
-### 2.1. Usuario y nombre
+### 2.1. Usuario y nombre del servidor
 
-Se creó el usuario de revisión mediante:
+Primero creé el usuario `bchecker`, que utilizaré para probar el acceso al servidor FTP.
 
 ```bash
 sudo adduser bchecker
@@ -31,9 +34,9 @@ sudo adduser bchecker
 
 ![Creación del usuario bchecker en F-N02](../imagenes/F-N02/01-creacion-usuario-bchecker.png)
 
-*Figura 1. Creación de la cuenta local y asignación de contraseña.*
+*Figura 1. Creación del usuario local y configuración de su contraseña.*
 
-La comprobación del nombre devuelve `F-N02`:
+Después comprobé el nombre de la máquina con este comando:
 
 ```bash
 hostname
@@ -41,13 +44,19 @@ hostname
 
 ![Nombre del servidor FTP](../imagenes/F-N02/02-hostname-ftp.png)
 
-*Figura 2. Hostname efectivo del servidor.*
+*Figura 2. Comprobación del nombre del servidor, que aparece como F-N02.*
 
-El Word indica que se cambió el nombre, pero no muestra el comando utilizado. Para reproducir esa asignación se puede usar `sudo hostnamectl set-hostname F-N02`; se distingue esta instrucción de la comprobación capturada.
+En la captura se ve que el nombre del equipo es `F-N02`. Para configurar este nombre desde cero también se puede utilizar el siguiente comando:
 
-### 2.2. Red estática
+```bash
+sudo hostnamectl set-hostname F-N02
+```
 
-La captura de `/etc/netplan/00-installer-config.yaml` contiene estas directivas, conservadas en [netplan-ftp.yaml](../config/ftp/netplan-ftp.yaml):
+### 2.2. Configuración de la red
+
+Después revisé el archivo de Netplan `/etc/netplan/00-installer-config.yaml`, donde está configurada la dirección IP del servidor.
+
+El contenido que aparece en la captura también está guardado en [netplan-ftp.yaml](../config/ftp/netplan-ftp.yaml).
 
 ```yaml
 network:
@@ -64,11 +73,15 @@ network:
 
 ![Configuración Netplan del servidor FTP](../imagenes/F-N02/03-netplan-ftp.png)
 
-*Figura 3. Dirección fija y ruta predeterminada por la interfaz DMZ de R-N02.*
+*Figura 3. Configuración de la IP fija, la puerta de enlace y el servidor DNS.*
 
-La dirección fija facilita que los clientes encuentren siempre el servicio en la misma IP. El DNS mostrado es externo; no se sustituye por DNS-N02 en esta transcripción, porque ese cambio no aparece en la evidencia.
+La dirección `192.168.10.11/24` es fija, así que los clientes pueden encontrar el servidor FTP siempre en la misma IP. La puerta de enlace es `192.168.10.1`, que corresponde al router R-N02.
 
-### 2.3. Conectividad previa
+En esta configuración aparece `1.1.1.1` como servidor DNS.
+
+### 2.3. Comprobar la conexión de red
+
+Antes de instalar y probar el servicio FTP, comprobé si el servidor podía comunicarse con el router y con una dirección externa.
 
 ```bash
 ping 192.168.10.1
@@ -77,13 +90,15 @@ ping 8.8.8.8
 
 ![Pruebas de conectividad de F-N02](../imagenes/F-N02/04-conectividad-router-internet.png)
 
-*Figura 4. Dos paquetes enviados y recibidos, con 0 % de pérdida, en cada destino.*
+*Figura 4. Pruebas de conexión con el router y con una dirección externa.*
 
-Las respuestas acreditan acceso al gateway y a una dirección externa desde F-N02. Al utilizar direcciones IP, estas pruebas no comprueban la resolución DNS. La ruta exclusiva por el router se debe contrastar con las tarjetas efectivas de Isard y la tabla de rutas.
+En las dos pruebas se enviaron y recibieron dos paquetes, sin pérdidas.
 
-## 3. Instalación del servicio
+Esto indica que el servidor puede comunicarse con el router y llegar a una dirección externa. Como las pruebas se hicieron con direcciones IP, no se comprueba la resolución de nombres DNS.
 
-Se instaló el paquete mediante:
+## 3. Instalación del servicio FTP
+
+Para instalar el servidor FTP utilicé el siguiente comando:
 
 ```bash
 sudo apt install vsftpd
@@ -91,9 +106,9 @@ sudo apt install vsftpd
 
 ![Instalación de vsftpd](../imagenes/F-N02/05-instalacion-vsftpd.png)
 
-*Figura 5. Descarga de vsftpd y sus dependencias desde los repositorios Jammy.*
+*Figura 5. Instalación de vsftpd y los paquetes necesarios.*
 
-Después se consultó el estado:
+Una vez instalado, comprobé si el servicio estaba funcionando:
 
 ```bash
 sudo systemctl status vsftpd
@@ -101,13 +116,15 @@ sudo systemctl status vsftpd
 
 ![Estado activo de vsftpd](../imagenes/F-N02/06-estado-vsftpd.png)
 
-*Figura 6. Servicio `active (running)` y unidad marcada como `enabled`.*
+*Figura 6. El servicio aparece como `active (running)` y tiene el inicio automático habilitado.*
 
-Esta salida acredita que el proceso está activo y la unidad tiene el arranque habilitado en ese momento. No sustituye una prueba de funcionamiento después de reiniciar la VM. Además, la captura precede a la edición de opciones en el orden del documento.
+En la captura se ve que vsftpd está funcionando y que está configurado para iniciarse automáticamente al arrancar el sistema.
 
-## 4. Configuración de acceso y escritura
+Esta comprobación corresponde al momento de la captura. No se muestra una prueba del servicio después de reiniciar la máquina.
 
-En `/etc/vsftpd.conf` se muestran:
+## 4. Configuración del acceso y los permisos de escritura
+
+Después revisé el archivo `/etc/vsftpd.conf`, donde aparecen estas opciones:
 
 ```ini
 anonymous_enable=NO
@@ -117,34 +134,40 @@ write_enable=YES
 
 ![Directivas visibles de vsftpd](../imagenes/F-N02/07-directivas-vsftpd.png)
 
-*Figura 7. Acceso anónimo deshabilitado, usuarios locales habilitados y órdenes de escritura permitidas.*
+*Figura 7. Configuración del acceso anónimo, los usuarios locales y la escritura de archivos.*
 
-| Directiva | Efecto |
+Estas opciones sirven para configurar cómo se pueden conectar los usuarios al servidor FTP.
+
+| Directiva | Función |
 | --- | --- |
-| `anonymous_enable=NO` | Deshabilita el inicio de sesión anónimo. |
-| `local_enable=YES` | Permite autenticación con cuentas locales, como `bchecker`, sujeta al resto de controles del servicio. |
-| `write_enable=YES` | Habilita órdenes de escritura; la operación concreta también depende de los permisos del sistema de archivos. |
+| `anonymous_enable=NO` | Desactiva el acceso anónimo al servidor. |
+| `local_enable=YES` | Permite que los usuarios locales, como `bchecker`, puedan iniciar sesión, siempre que cumplan el resto de condiciones. |
+| `write_enable=YES` | Permite utilizar comandos de escritura, aunque también hacen falta los permisos adecuados en las carpetas. |
 
-Se conserva únicamente este fragmento en [vsftpd-fragmento.conf](../config/ftp/vsftpd-fragmento.conf). No acredita la configuración completa de rutas, confinamiento de usuarios, TLS o puertos de datos.
+He guardado estas opciones en el archivo [vsftpd-fragmento.conf](../config/ftp/vsftpd-fragmento.conf).
 
-Para reproducir un cambio del archivo hay que guardarlo y reiniciar el servicio, comprobando después su estado. Esa ejecución posterior no se ve en el Word:
+Este archivo solo contiene una parte de la configuración del servidor. No incluye todas las opciones relacionadas con las carpetas de los usuarios, el cifrado o los puertos utilizados para transferir archivos.
+
+Después de modificar el archivo de configuración, se puede reiniciar el servicio y comprobar su estado con estos comandos:
 
 ```bash
 sudo systemctl restart vsftpd
 sudo systemctl status vsftpd
 ```
 
-Referencia: [manual de vsftpd.conf para Ubuntu Jammy](https://manpages.ubuntu.com/manpages/jammy/man5/vsftpd.conf.5.html).
+Referencia: [Manual de configuración de vsftpd para Ubuntu Jammy](https://manpages.ubuntu.com/manpages/jammy/man5/vsftpd.conf.5.html).
 
 ## 5. Prueba de acceso desde Linux
 
-Desde una terminal identificada como **PCL-N02**, se abrió una conexión:
+Para comprobar que el servidor FTP funcionaba, hice una prueba desde el cliente Linux PCL-N02.
+
+Ejecuté el siguiente comando:
 
 ```bash
 ftp 192.168.10.11
 ```
 
-Se introdujo el usuario `bchecker` y la contraseña de laboratorio. El servidor devolvió:
+Después introduje el usuario `bchecker` y la contraseña de la práctica. El servidor respondió con estos mensajes:
 
 ```text
 220 (vsFTPd 3.0.5)
@@ -153,26 +176,32 @@ Se introdujo el usuario `bchecker` y la contraseña de laboratorio. El servidor 
 
 ![Sesión FTP autenticada desde PCL-N02](../imagenes/F-N02/08-login-ftp-desde-linux.png)
 
-*Figura 8. Autenticación correcta y presentación del prompt `ftp>`.*
+*Figura 8. Inicio de sesión correcto en el servidor FTP desde PCL-N02.*
 
-La prueba acredita conectividad con el servicio y autenticación de la cuenta. En la arquitectura prevista, el cliente está en la Intranet y F-N02 en la DMZ, por lo que la comunicación requiere enrutamiento entre ambos segmentos.
+En la captura aparece el mensaje `230 Login successful`, lo que confirma que he podido iniciar sesión con el usuario `bchecker`.
 
-FTP utiliza conexiones separadas para el control de sesión y los datos. **Un login correcto no demuestra una subida o descarga correcta.** La captura no muestra `ls`, `put`, `get` ni un resultado de transferencia; tampoco permite determinar si se utilizó modo activo o pasivo.
+Como PCL-N02 está en la Intranet y F-N02 está en la DMZ, la conexión pasa por el router R-N02 para llegar al servidor.
 
-Referencia: [protocolo FTP, RFC 959](https://www.rfc-editor.org/rfc/rfc959).
+Esta prueba confirma que la conexión y el inicio de sesión funcionan, pero **no demuestra que se puedan subir o descargar archivos**. Para comprobarlo tendría que ejecutar comandos como `ls`, `put` o `get` y verificar el resultado.
 
-## 6. Validación pendiente
+Referencia: [Protocolo FTP, RFC 959](https://www.rfc-editor.org/rfc/rfc959).
 
-| Comprobación | Situación |
+## 6. Comprobaciones pendientes
+
+Después de revisar las capturas, este es el estado de las pruebas del servidor FTP.
+
+| Comprobación | Estado |
 | --- | --- |
-| Hostname F-N02 | Acreditado. |
-| IP, gateway y DNS en Netplan | Configuración visible; falta exportación efectiva y tabla de rutas. |
-| Ping al gateway y a una IP externa | Acreditados. |
-| Instalación y estado de vsftpd | Acreditados. |
-| Inicio de sesión desde PCL-N02 | Acreditado con `bchecker`. |
-| Listado de directorios | No aparece. |
-| Subida y descarga | No aparecen. |
-| Acceso desde Windows | No aparece. |
-| Configuración completa y persistencia | Faltan copia del archivo efectivo y prueba tras reinicio. |
+| Nombre del servidor F-N02 | Comprobado. |
+| IP, puerta de enlace y DNS en Netplan | Aparecen en el archivo de configuración; falta comprobar la configuración aplicada y la tabla de rutas. |
+| Conexión con el router y una IP externa | Comprobada mediante ping. |
+| Instalación y estado de vsftpd | Comprobados. |
+| Inicio de sesión desde PCL-N02 | Correcto con el usuario `bchecker`. |
+| Listado de archivos | Pendiente de comprobar. |
+| Subida y descarga de archivos | Pendiente de comprobar. |
+| Acceso desde Windows | Pendiente de probar. |
+| Configuración completa y funcionamiento tras reiniciar | Pendiente de comprobar. |
 
-Para completar la prueba funcional se propone crear en el cliente un archivo de texto propio, subirlo con `put`, recuperarlo con otro nombre mediante `get` y comparar su contenido. Deben registrarse el directorio utilizado, sus permisos y el resultado de cada operación. Estas acciones quedan pendientes; no se dan por realizadas.
+Para terminar la práctica, me falta probar la transferencia de archivos. Para ello puedo crear un archivo de texto en el cliente, subirlo al servidor con `put` y descargarlo después con `get` utilizando otro nombre.
+
+También tengo que comprobar los permisos de la carpeta donde se guardan los archivos y verificar que la transferencia se realiza correctamente. Estas pruebas todavía están pendientes.
