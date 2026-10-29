@@ -45,15 +45,15 @@ El Word describe la preparación del bastión y claves SSH para administrar esta
 La secuencia utiliza:
 
 ```bash
-sudo hostnamectl set-hostname B-NCC
+sudo hostnamectl set-hostname B-N02
 hostname
 ```
 
-![Asignación del nombre provisional de la base de datos](../imagenes/B-N02/04-cambio-hostname-provisional.png)
+![Asignación del nombre provisional de la base de datos](../imagenes/B-N02/04-cambio-hostname-provisional-1.png)
 
-*Figura 4. El comando visible utiliza B-NCC.*
+*Figura 4. El comando visible utiliza B-N02.*
 
-![Comprobación del hostname provisional](../imagenes/B-N02/05-hostname-provisional.png)
+![Comprobación del hostname provisional](../imagenes/B-N02/05-hostname-provisional-1.png)
 
 *Figura 5. La comprobación devuelve B-NCC, distinto del nombre B-N02 del inventario.*
 
