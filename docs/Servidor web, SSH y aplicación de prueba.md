@@ -130,7 +130,7 @@ En el código se ve lo siguiente:
 - Se intenta conectar con `mysqli` usando los campos `usuario` y `clave` del formulario.
 - Si `connect_errno` indica un fallo, se muestra un mensaje de credenciales incorrectas.
 
-El login usa las credenciales del formulario para conectarse directamente a MySQL, así que no hay una tabla de usuarios aparte en la aplicación. El inicio del código está en [index.php.fragmento.txt](../config/web/evidencias/index.php.fragmento.php).
+El login usa las credenciales del formulario para conectarse directamente a MySQL, así que no hay una tabla de usuarios aparte en la aplicación. El inicio del código está en [index.php.fragmento.php](../config/web/evidencias/index.php.fragmento.php).
 
 Referencias: [sesiones en PHP](https://www.php.net/manual/es/book.session.php) y [conexión mysqli](https://www.php.net/manual/es/mysqli.construct.php).
 
