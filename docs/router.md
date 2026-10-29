@@ -4,11 +4,9 @@
 
 ## 1. Objetivo y alcance
 
-El router **R-N02** conecta las redes DMZ e Intranet del proyecto con la red Default de Isard, que proporciona la salida a internet. Los equipos de cada red interna utilizan la dirección del router en su segmento como puerta de enlace.
+El router **R-N02** conecta las redes DMZ e Intranet del proyecto con la red Default de Isard, que es la que nos da salida a internet. Los equipos de cada red usan como puerta de enlace la IP que tiene el router en su red.
 
-La implementación utiliza **Ubuntu Server 24.04**, según la documentación previa del repositorio. El responsable de esta parte es **Elian**. Se documentan la identificación del equipo, el direccionamiento, el reenvío de paquetes IPv4, la traducción de direcciones y las comprobaciones disponibles.
-
-Esta memoria reúne el contenido de `Explicación i Capturas.docx` y la configuración de red que ya figuraba en el repositorio. Las pruebas adicionales se identifican como pendientes; no se presentan como ejecutadas en las máquinas.
+Lo he montado con **Ubuntu Server 24.04** y esta parte la he hecho yo (**Elian**). En esta memoria explico cómo le puse el nombre al equipo, cómo configuré las IPs, cómo activé que el router pase paquetes de una red a otra y cómo configuré la salida a internet. También incluyo las pruebas que hice.
 
 ## 2. Topología y direccionamiento
 
