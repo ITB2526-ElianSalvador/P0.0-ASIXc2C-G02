@@ -53,7 +53,7 @@ Con DHCP, el equipo solicita los parámetros de red al servidor. No se introduce
 
 *Figura 2. Configuración activa visible de `enp1s0`. El comentario del archivo menciona NetworkManager.*
 
-La copia del YAML ya está en [config/dns-dhcp/netplan-cliente-linux.yaml](../config/dns-dhcp/netplan-cliente-linux.yaml). Se reutiliza ese archivo para evitar mantener dos versiones de la misma configuración. Para revisar un cambio antes de aplicarlo se pueden utilizar `sudo netplan generate` y `sudo netplan try`; estas órdenes adicionales no aparecen ejecutadas en las capturas de clientes.
+La copia del YAML ya está en [config/dns-dhcp/netplan-cliente-linux.yaml](../config/dns-dhcp/netplan-cliente-linux.yaml). Se reutiliza ese archivo para evitar mantener dos versiones de la misma configuración. Para revisar un cambio antes de aplicarlo se pueden utilizar `sudo netplan generate` y `sudo netplan try`.
 
 Referencia: [configuración YAML de Netplan](https://netplan.readthedocs.io/en/stable/netplan-yaml/).
 
