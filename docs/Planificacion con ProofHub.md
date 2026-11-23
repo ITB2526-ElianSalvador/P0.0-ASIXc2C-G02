@@ -1,6 +1,6 @@
 # Planificación y seguimiento del proyecto con ProofHub
 
-[Volver al proyecto](../README.md) · [Arquitectura](arquitectura.md) · [Manual de usuario y administración](<Manual de usuario y administración.md>)
+[Volver al proyecto](../README.md) · [Arquitectura](arquitectura.md) · [Manual de usuario y administración](<Manual de usuario y administracion.md>)
 
 ## 1. Cómo organizamos el trabajo
 
@@ -46,7 +46,7 @@ Este es el reparto inicial recogido en el README. Sirve de referencia para enten
 
 ### 2.1. Comienzo del sprint
 
-![Tablero de ProofHub al comienzo del Sprint 1](../imagenes/ProofHub/comienzo_Sprint1.png)
+![Tablero de ProofHub al comienzo del Sprint 1](../imagenes/comienzo_Sprint1.png)
 
 *Figura 1. Comienzo del Sprint 1: las 11 tareas del sprint están en Assignades spring y las 8 tareas de los sprints 2 y 3 (SP2 y SP3) esperan en Pendents backlog (To Do).*
 
@@ -78,11 +78,11 @@ El sprint tuvo dos partes. En la primera, con vencimiento el 19 de octubre, crea
 | Apache, PHP y SSH en W-N02 | SF | 4 nov |
 | Diagrama de arquitectura | SE | 4 nov |
 
-Evidencias técnicas relacionadas: [Arquitectura](arquitectura.md), Router R-N02, DNS/DHCP, Clientes y Web y aplicación. Las capturas del router muestran la configuración de IP, `ip_forward=1`, la regla NAT y pruebas desde la DMZ hacia el gateway y una IP exterior.
+Evidencias técnicas relacionadas: [Arquitectura](arquitectura.md), [Router R-N02](router.md), [DNS y DHCP](<DNS y DHCP.md>), [Clientes](Clientes.md) y [Servidor web, SSH y aplicación de prueba](<Servidor web, SSH y aplicación de prueba.md>). Las capturas del router muestran la configuración de IP, `ip_forward=1`, la regla NAT y pruebas desde la DMZ hacia el gateway y una IP exterior.
 
 ### 2.3. Final del sprint
 
-![Tablero de ProofHub al final del Sprint 1](../imagenes/ProofHub/Finalizado_Sprint1.png)
+![Tablero de ProofHub al final del Sprint 1](../imagenes/Finalizado_Sprint1.png)
 
 *Figura 2. Final del Sprint 1: las 11 tareas están en Finalitzades (Done) al 100% y las etapas En curs, Bloquejades y Pendents de Revisió están vacías.*
 
@@ -94,7 +94,7 @@ Evidencias técnicas relacionadas: [Arquitectura](arquitectura.md), Router R-N02
 
 ### 3.1. Comienzo del sprint
 
-![Tablero de ProofHub al comienzo del Sprint 2](../imagenes/ProofHub/Comienzo_Sprint2.png)
+![Tablero de ProofHub al comienzo del Sprint 2](../imagenes/Comienzo_Sprint2.png)
 
 *Figura 3. Comienzo del Sprint 2: las 4 tareas SP2 están en En curs (Doing), Assignades spring está vacía y las 4 tareas SP3 siguen en Pendents backlog (To Do).*
 
@@ -102,7 +102,7 @@ Evidencias técnicas relacionadas: [Arquitectura](arquitectura.md), Router R-N02
 
 - Instalamos y configuramos vsftpd en F-N02 (192.168.10.11), en la DMZ, para permitir el acceso a usuarios locales.
 - Desarrollamos la aplicación web en PHP, alojada en W-N02, con una página de inicio de sesión que, después del login, muestra la tabla de equipamientos guardada en la base de datos.
-- Generamos una clave SSH en W-N02 para conectar con el repositorio de GitHub y documentamos el proceso en `docs/git.md`.
+- Generamos una clave SSH en W-N02 para conectar con el repositorio de GitHub y documentamos el proceso en [Control de versiones con Git](<Control de versiones con Git.md>).
 - Entre todo el grupo documentamos cada parte en Markdown dentro de `docs/` y guardamos los archivos de configuración en `config/`, sin presentar fragmentos como si fueran instalaciones completas.
 
 | Tarea en ProofHub | Responsable | Vencimiento |
@@ -112,11 +112,11 @@ Evidencias técnicas relacionadas: [Arquitectura](arquitectura.md), Router R-N02
 | SP2-Clave SSH de W-N02 con GitHub y docs/git.md | RD | 18 nov |
 | SP2-Documentación en docs/ y config/ del repo | Todo el grupo | 18 nov |
 
-Evidencias técnicas relacionadas: FTP, Web y aplicación, Base de datos y `docs/git.md`.
+Evidencias técnicas relacionadas: [Servidor FTP](<Servidor FTP.md>), [Servidor web, SSH y aplicación de prueba](<Servidor web, SSH y aplicación de prueba.md>), [Base de datos](<Base de datos.md>) y [Control de versiones con Git](<Control de versiones con Git.md>).
 
 ### 3.3. Final del sprint
 
-![Tablero de ProofHub al final del Sprint 2](../imagenes/ProofHub/Finalizado_Sprint2.png)
+![Tablero de ProofHub al final del Sprint 2](../imagenes/Finalizado%20Sprint2.png)
 
 *Figura 4. Final del Sprint 2: Finalitzades (Done) pasa a tener 15 tareas (las 11 del Sprint 1 y las 4 SP2), todas al 100%, y Pendents de Revisió queda vacía.*
 
@@ -128,7 +128,7 @@ Evidencias técnicas relacionadas: FTP, Web y aplicación, Base de datos y `docs
 
 ### 4.1. Comienzo del sprint
 
-![Tablero de ProofHub al comienzo del Sprint 3](../imagenes/ProofHub/Comienzo_Sprint3.png)
+![Tablero de ProofHub al comienzo del Sprint 3](../imagenes/Comienzo_Sprint3.png)
 
 *Figura 5. Comienzo del Sprint 3: las 4 tareas SP3 están en Pendents backlog (To Do), las etapas intermedias están vacías y Finalitzades (Done) tiene las 15 tareas de los sprints 1 y 2.*
 
@@ -149,11 +149,11 @@ Las cuatro tareas del sprint eran de todo el grupo.
 | SP3-Revisar documentación | Sin fecha |
 | SP3-Documentar todo en md | Sin fecha |
 
-Evidencias técnicas relacionadas: Clientes, Web y aplicación, FTP y [Manual de usuario y administración](<Manual de usuario y administración.md>).
+Evidencias técnicas relacionadas: [Clientes](Clientes.md), [Servidor web, SSH y aplicación de prueba](<Servidor web, SSH y aplicación de prueba.md>), [Servidor FTP](<Servidor FTP.md>) y [Manual de usuario y administración](<Manual de usuario y administracion.md>).
 
 ### 4.3. Final del sprint
 
-![Tablero de ProofHub al final del Sprint 3](../imagenes/ProofHub/Finalizado_Sprint3.png)
+![Tablero de ProofHub al final del Sprint 3](../imagenes/Finalizado_Sprint3.png)
 
 *Figura 6. Final del Sprint 3: las tareas de los tres sprints están en Finalitzades (Done) al 100%.*
 
