@@ -43,7 +43,7 @@ La aplicación muestra un formulario y un listado de equipamientos de educación
 
 Los clientes utilizan el rango DHCP `192.168.20.100` a `192.168.20.150`. Las direcciones observadas no son direcciones fijas. Las capturas de preparación de la base de datos muestran el nombre provisional **B-NCC**, pendiente de contrastar con B-N02.
 
-Usuario de revisión requerido en los sistemas: `bchecker` / `bchecker121`. Las comprobaciones de cada cuenta se indican en su documento; una cuenta del sistema operativo y una cuenta MySQL se verifican por separado.
+Para las pruebas existe un usuario de revisión llamado `bchecker` en diferentes sistemas. **Las contraseñas no deben publicarse en el repositorio:** el administrador deberá entregarlas mediante un canal seguro y cambiar cualquier credencial de laboratorio que haya quedado expuesta en el historial de Git. Las comprobaciones de cada cuenta se indican en su documento; una cuenta del sistema operativo y una cuenta MySQL se verifican por separado.
 
 ## Índice de documentación
 
@@ -55,6 +55,7 @@ Usuario de revisión requerido en los sistemas: `bchecker` / `bchecker121`. Las 
 - [Servidor FTP](<docs/Servidor FTP.md>)
 - [Clientes](docs/Clientes.md)
 - [Control de versiones con Git](<docs/Control de versiones con Git.md>)
-- [Planificación con ProofHub](<docs/Planificacion con ProofHub.md>)
+- [Planificación de los tres sprints con ProofHub](<docs/Planificacion con ProofHub.md>)
+- [Manual de usuario y administración](<docs/Manual de usuario y administracion.md>)
 - [Inventario de configuración](<docs/Ficheros de configuración.md>)
 - [Carpeta de configuración](config/README.md)
