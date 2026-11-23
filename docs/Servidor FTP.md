@@ -185,23 +185,3 @@ Como PCL-N02 está en la Intranet y F-N02 está en la DMZ, la conexión pasa por
 Esta prueba confirma que la conexión y el inicio de sesión funcionan, pero **no demuestra que se puedan subir o descargar archivos**. Para comprobarlo tendría que ejecutar comandos como `ls`, `put` o `get` y verificar el resultado.
 
 Referencia: [Protocolo FTP, RFC 959](https://www.rfc-editor.org/rfc/rfc959).
-
-## 6. Comprobaciones pendientes
-
-Después de revisar las capturas, este es el estado de las pruebas del servidor FTP.
-
-| Comprobación | Estado |
-| --- | --- |
-| Nombre del servidor F-N02 | Comprobado. |
-| IP, puerta de enlace y DNS en Netplan | Aparecen en el archivo de configuración; falta comprobar la configuración aplicada y la tabla de rutas. |
-| Conexión con el router y una IP externa | Comprobada mediante ping. |
-| Instalación y estado de vsftpd | Comprobados. |
-| Inicio de sesión desde PCL-N02 | Correcto con el usuario `bchecker`. |
-| Listado de archivos | Pendiente de comprobar. |
-| Subida y descarga de archivos | Pendiente de comprobar. |
-| Acceso desde Windows | Pendiente de probar. |
-| Configuración completa y funcionamiento tras reiniciar | Pendiente de comprobar. |
-
-Para terminar la práctica, me falta probar la transferencia de archivos. Para ello puedo crear un archivo de texto en el cliente, subirlo al servidor con `put` y descargarlo después con `get` utilizando otro nombre.
-
-También tengo que comprobar los permisos de la carpeta donde se guardan los archivos y verificar que la transferencia se realiza correctamente. Estas pruebas todavía están pendientes.
