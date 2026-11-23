@@ -93,16 +93,5 @@ El formulario intenta abrir una conexión `mysqli` con las credenciales introduc
 
 Esto respalda el funcionamiento observado de la aplicación con datos. Para atribuir y reproducir toda la carga hacen falta la configuración efectiva de MySQL, el código de consulta y el estado real del esquema. El número mostrado no se interpreta como el total de filas de la base de datos.
 
-## 6. Comprobaciones pendientes
-
-Para completar esta sección, recoger directamente en la VM:
-
-- [ ] Hostname definitivo, IP efectiva y tabla de rutas.
-- [ ] Versión de MySQL y estado del servicio.
-- [ ] Configuración de escucha que permite el acceso desde W-N02.
-- [ ] Definición real de `equipaments`, incluidos tipos, claves y tabla consultada.
-- [ ] Creación del usuario de MySQL y permisos efectivos de acceso desde la aplicación.
-- [ ] Archivo SQL o procedimiento de carga utilizado, con resultados y recuento de registros.
-- [ ] Consulta de muestra y prueba de conexión desde W-N02.
 
 La cuenta Linux `bchecker`, el usuario de MySQL y el acceso a la aplicación se deben comprobar por separado. Las cuentas de MySQL pueden tener restricciones por origen; no se inventan sentencias `GRANT` ni parámetros de escucha sin conocer la configuración aplicada.
