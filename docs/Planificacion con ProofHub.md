@@ -32,6 +32,6 @@ Entre las tareas que aparecen están las siguientes:
 
 *Figura 2. Segunda captura del tablero con las tareas relacionadas con la infraestructura, los clientes y la aplicación web.*
 
-![Tercera vista del seguimiento del proyecto (../imagenes/ProofHub/Captura de pantalla de 2026-11-23 15-17-48.png)]
+![Tercera vista del seguimiento del proyecto](../imagenes/ProofHub/Captura de pantalla de 2026-11-23 15-17-48.png)
 
 *Figura 3. Tercera captura del tablero con ya las tareas finalizadas.
